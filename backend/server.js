@@ -1,15 +1,16 @@
-const express = require("express");
-const mongoose = require("mongoose");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import xlsx from "xlsx"
+import dotenv from "dotenv";
+
+dotenv.config();
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.static("fronted"));
-const cors = require("cors");
-app.use(cors());
-const path = require('path');
-const xlsx = require('xlsx');
 
 // התחברות לבסיס הנתונים
-const dbURL = "mongodb+srv://benaloni230:asdf123123@cluster0.3kuoij5.mongodb.net/wolbeedb'";
 mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("DB connected"))
   .catch((error) => console.error("Error connecting to DB:", error));
@@ -20,34 +21,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // קריאת הנתונים מקובץ האקסל
-// const workbook = xlsx.readFile('backend/employeesUpdated.xlsx');
-// const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-// const data = xlsx.utils.sheet_to_json(worksheet);
+const workbook = xlsx.readFile("/home/eden/Desktop/newwolbee/backend/employeesUpdated.xlsx");
+const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+const data = xlsx.utils.sheet_to_json(worksheet);
 
-// // סכמה של עובד
-// const employeeSchema = new mongoose.Schema({
-//   fullName: String,
-//   employeeOfManagerId: String,
-//   id: String,
-//   role: String,
-//   DataOfBirth: String,
-//   PlaceOfResidence: String,
-//   FamilyStatus: String,
-//   NumOfChildren: Number,
-//   YearsInTheCompany: Number,
-//   Anniversary: String,
-//   LastestActivity: Array,
-//   InterestingFact: String,
-//   ClosestPersonalEvent: Array,
-//   singers: Array,
-//   FoodAndDrinks: Array,
-//   Restaurants: Array,
-//   Hobbys: Array,
-//   TopInsights: Array,
-//   LatestInfo: Array,
-// });
 
-// const Employee = mongoose.model('Employee', employeeSchema);
+
 
 // הוספת הנתונים מהאקסל למסד הנתונים
 // data.forEach(async (row) => {
@@ -76,12 +55,7 @@ app.use(cors(corsOptions));
 //   await employee.save();
 // });
 
-// יצירת מודל של מנהל
-const Manager = mongoose.model("User", {
-  email: String,
-  password: String,
-  id: String
-});
+
 
 // POST route לקבלת נתוני המשתמש מהעמוד ולשמירתם במסד הנתונים
 app.post("/register", async (req, res) => {
