@@ -11,13 +11,13 @@ const userSchema = new mongoose.Schema({
         type : String,
         required : [true, "please provide password"]
     },
-    civilId : { //currently in db is: id
+    id : {  //civilId maybe?
         type : Number,
         required : [true, "please provide Id"]
     },
     role : {
         type : String,
-        required : [true, "please provide role"]
+        required : [true, "please provide a role"]
     },
 })
 
@@ -25,9 +25,3 @@ const UserModel = mongoose.model('users', userSchema);
 
 export default UserModel;
 
-// יצירת מודל של מנהל
-// const Manager = mongoose.model("User", {
-//     email: String,
-//     password: String,
-//     id: String
-//   });

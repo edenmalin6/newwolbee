@@ -1,151 +1,151 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Outlet, Route, Routes, Navigate } from "react-router-dom";
-import Header from "../../views/layout/Header";
-import Sidebar from "../../views/layout/Sidebar";
-import ChatSidebar from "../../components/Mainpages/chatSidebar";
-import ComponentSidebar from "../../components/ComponentSidebar";
-import EmailSidebar from "../../components/Mainpages/emailSidebar";
-import SettingsSidebar from "../../components/SettingsSidebar";
+import Header from "../../views/layout/Header.jsx";
+import Sidebar from "../../views/layout/Sidebar.jsx";
+import ChatSidebar from "../../components/Mainpages/chatSidebar.jsx";
+import ComponentSidebar from "../../components/ComponentSidebar.jsx";
+import EmailSidebar from "../../components/Mainpages/emailSidebar.jsx";
+import SettingsSidebar from "../../components/SettingsSidebar.jsx";
 
-import BasicInputs from "../../views/pages/Ui_Interface/Forms/BasicInputs";
-import InputGroups from "../../views/pages/Ui_Interface/Forms/InputGroups";
-import HorizontalForm from "../../views/pages/Ui_Interface/Forms/HorizontalForm";
-import VerticalForm from "../../views/pages/Ui_Interface/Forms/VerticalForm";
-import Formmask from "../../views/pages/Ui_Interface/Forms/Formmask";
-import Formvalidation from "../../views/pages/Ui_Interface/Forms/Formvalidation";
-import TablesBasic from "../../views/pages/Ui_Interface/Tables/TablesBasic";
-import DataTables from "../../views/pages/Ui_Interface/Tables/DataTables";
-import PerformanceIndicator from "../../views/pages/Performance/Performance/PerformanceIndicator";
-import PerformanceReview from "../../views/pages/Performance/Performance/PerformanceReview";
-import PerformanceAppraisal from "../../views/pages/Performance/Performance/PerformanceAppraisal";
-import GoalTracking from "../../views/pages/Performance/Goals/GoalTracking";
-import GoalType from "../../views/pages/Performance/Goals/GoalType";
-import Trainers from "../../views/pages/Performance/Training/Trainers";
-import Training from "../../views/pages/Performance/Training/Training";
-import TrainingType from "../../views/pages/Performance/Training/TrainingType";
+import BasicInputs from "../../views/pages/Ui_Interface/Forms/BasicInputs.jsx";
+import InputGroups from "../../views/pages/Ui_Interface/Forms/InputGroups.jsx";
+import HorizontalForm from "../../views/pages/Ui_Interface/Forms/HorizontalForm.jsx";
+import VerticalForm from "../../views/pages/Ui_Interface/Forms/VerticalForm.jsx";
+import Formmask from "../../views/pages/Ui_Interface/Forms/Formmask.jsx";
+import Formvalidation from "../../views/pages/Ui_Interface/Forms/Formvalidation.jsx";
+import TablesBasic from "../../views/pages/Ui_Interface/Tables/TablesBasic.jsx";
+import DataTables from "../../views/pages/Ui_Interface/Tables/DataTables.jsx";
+import PerformanceIndicator from "../../views/pages/Performance/Performance/PerformanceIndicator.jsx";
+import PerformanceReview from "../../views/pages/Performance/Performance/PerformanceReview.jsx";
+import PerformanceAppraisal from "../../views/pages/Performance/Performance/PerformanceAppraisal.jsx";
+import GoalTracking from "../../views/pages/Performance/Goals/GoalTracking.jsx";
+import GoalType from "../../views/pages/Performance/Goals/GoalType.jsx";
+import Trainers from "../../views/pages/Performance/Training/Trainers.jsx";
+import Training from "../../views/pages/Performance/Training/Training.jsx";
+import TrainingType from "../../views/pages/Performance/Training/TrainingType.jsx";
 
 // import EmployeeProfile from "../../views/pages/Pages/profile/employeeprofile";
-import AdminDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/adminDashboard";
-import EmployeeDashboard from "../../views/pages/MainPages/Dashboard/EmployeeDashboard";
-import Chat from "../../views/pages/MainPages/Apps/chat";
-import VoiceCall from "../../views/pages/MainPages/Apps/calls/voiceCall";
-import VideoCall from "../../views/pages/MainPages/Apps/calls/VideoCall";
-import Outgoing from "../../views/pages/MainPages/Apps/calls/outgoingCall";
-import IncomingCall from "../../views/pages/MainPages/Apps/calls/incomingCall";
-import Calendar from "../../views/pages/MainPages/Apps/calendar";
-import Contacts from "../../views/pages/MainPages/Apps/contacts";
-import Email from "../../views/pages/MainPages/Apps/Email";
-import FileManager from "../../views/pages/MainPages/Apps/FileManager";
-import Compose from "../../views/pages/MainPages/Apps/Email/compose";
-import Estimates from "../../views/pages/HR/Sales/Estimates";
-import CreateEstimate from "../../views/pages/HR/Sales/Estimates/createEstimate";
-import EditEstimate from "../../views/pages/HR/Sales/Estimates/EditEstimate";
-import Invoices from "../../views/pages/HR/Sales/Invoices/Index";
-import CreateInvoice from "../../views/pages/HR/Sales/Invoices/createInvoice";
-import EditInvoice from "../../views/pages/HR/Sales/Invoices/editInvoice";
-import InvoiceView from "../../views/pages/HR/Sales/Invoices/invoiceView";
-import Payments from "../../views/pages/HR/Sales/payments";
-import Promotion from "../../views/pages/Performance/Promotion";
-import Resignation from "../../views/pages/Performance/Resignation";
-import Termination from "../../views/pages/Performance/Termination";
-import Components from "../../views/pages/Ui_Interface/Components/Components";
-import Settings from "../../views/pages/Administration/Settings/Settings";
-import Localization from "../../views/pages/Administration/Settings/Localization";
-import ThemeSettings from "../../views/pages/Administration/Settings/ThemeSettings";
-import RolesPermissions from "../../views/pages/Administration/Settings/RolesPermissions";
-import EmailSettings from "../../views/pages/Administration/Settings/EmailSettings";
-import PerformanceSetting from "../../views/pages/Administration/Settings/Performance/PerformanceSetting";
-import ApprovalSetting from "../../views/pages/Administration/Settings/ApprovalSetting";
-import InvoiceSettings from "../../views/pages/Administration/Settings/InvoiceSettings";
-import SalarySettings from "../../views/pages/Administration/Settings/SalarySettings";
-import NotificationSettings from "../../views/pages/Administration/Settings/NotificationSettings";
-import LeaveType from "../../views/pages/Administration/Settings/LeaveType";
-import ToxboxSetting from "../../views/pages/Administration/Settings/ToxboxSetting";
-import CronSetting from "../../views/pages/Administration/Settings/CronSetting";
-import AllEmpoyee from "../../views/pages/Employees/AllEmpoyee";
-import Holidays from "../../views/pages/Employees/Holidays";
-import AdminLeave from "../../views/pages/Employees/AdminLeave";
-import EmployeeLeave from "../../views/pages/Employees/EmployeeLeave";
-import LeaveSettings from "../../views/pages/Employees/LeaveSetting";
-import AttendenceAdmin from "../../views/pages/Employees/Attendenceadmin";
-import AttendanceEmployee from "../../views/pages/Employees/AttendenceEmployee";
-import Department from "../../views/pages/Employees/Department";
-import Designation from "../../views/pages/Employees/Designation";
-import TimeSheet from "../../views/pages/Employees/TimeSheet";
-import ShiftScheduling from "../../views/pages/Employees/ShiftandSchedule";
-import ShiftList from "../../views/pages/Employees/ShiftList";
-import OverTime from "../../views/pages/Employees/OverTime";
-import Clients from "../../views/pages/Employees/Clients";
-import Project from "../../views/pages/Employees/Projects/Project";
-import ClientList from "../../views/pages/Employees/ClientList";
-import Tasks from "../../views/pages/Employees/Projects/Tasks";
-import { SidebarProject } from "../../views/pages/Employees/Projects/SidebarProject";
-import TaskBoard from "../../views/pages/Employees/Projects/TaskBoard";
-import Leads from "../../views/pages/Employees/Leads";
-import Ticket from "../../views/pages/Employees/Ticket";
-import ClientProfile from "../../views/pages/Profile/ClientProfile";
-import Profile from "../../views/pages/Profile/Profile";
-import Subscribtions from "../../views/pages/Subscribtions/Subscribtions";
-import SubscribedCompany from "../../views/pages/Subscribtions/SubscribedCompany";
-import SubscribtionsCompany from "../../views/pages/Subscribtions/SubscribtionsCompany";
-import Search from "../../views/pages/Pages/Search/Search";
-import Faq from "../../views/pages/Pages/Faq";
-import Terms from "../../views/pages/Pages/Terms";
-import PrivacyPolicy from "../../views/pages/Pages/PrivacyPolicy";
-import BlankPage from "../../views/pages/Pages/BlankPage";
-import KnowledgeBase from "../../views/pages/Administration/Knowledgebase/KnowledgeBase";
-import KnowledgeBaseView from "../../views/pages/Administration/Knowledgebase/KnowledgeBaseView";
-import EmployeeList from "../../views/pages/Employees/EmployeeList";
-import Expenses from "../../views/pages/HR/Sales/Expenses";
-import Activities from "../../views/pages/Administration/Activities";
-import ProvidentFund from "../../views/pages/HR/Sales/ProvidentFund";
-import Taxes from "../../views/pages/HR/Sales/Taxes";
-import Categories from "../../views/pages/HR/Accounting/Categories";
-import SubCategory from "../../views/pages/HR/Accounting/Categories/subCategory";
-import Budgets from "../../views/pages/HR/Accounting/Budgets.jsx";
-import BudgetExpenses from "../../views/pages/HR/Accounting/BudgetExpenses";
-import BudgetRevenues from "../../views/pages/HR/Accounting/BudgetRevenue";
-import EmployeeSalary from "../../views/pages/HR/Payroll/EmployeeSalary.jsx";
-import PaySlip from "../../views/pages/HR/Payroll/Payslip";
-import PayrollItems from "../../views/pages/HR/Payroll/PayrollItems.jsx";
-import Policies from "../../views/pages/HR/Policies";
-import ExpenseReport from "../../views/pages/HR/Reports/ExpenseReport";
-import InvoiceReport from "../../views/pages/HR/Reports/InvoiceReport";
-import PaymentReport from "../../views/pages/HR/Reports/PaymentReport";
-import ProjectReport from "../../views/pages/HR/Reports/ProjectReport";
-import TaskReport from "../../views/pages/HR/Reports/TaskReport";
-import UserReport from "../../views/pages/HR/Reports/UserReport";
-import EmployeeReport from "../../views/pages/HR/Reports/EmployeeReports";
-import PaySlipReports from "../../views/pages/HR/Reports/PaySlipReports";
-import AttendanceReport from "../../views/pages/HR/Reports/AttendanceReport";
-import LeaveReport from "../../views/pages/HR/Reports/LeaveReport";
-import DailyReports from "../../views/pages/HR/Reports/DailyReports";
-import Assets from "../../views/pages/Administration/Assets";
-import UserDashboard from "../../views/pages/Administration/Jobs/UserJob/UserDashboard";
-import UserAllJobs from "../../views/pages/Administration/Jobs/UserJob/UserAllJobs";
-import SavedJobs from "../../views/pages/Administration/Jobs/UserJob/SavedJobs";
-import AppliedJobs from "../../views/pages/Administration/Jobs/UserJob/AppliedJobs";
-import Interviewing from "../../views/pages/Administration/Jobs/UserJob/Interviewing";
-import JobAptitude from "../../views/pages/Administration/Jobs/UserJob/JobAptitude";
-import Questions from "../../views/pages/Administration/Jobs/UserJob/Questions";
-import UserOfferedJobs from "../../views/pages/Administration/Jobs/UserJob/UserOfferedJobs";
-import VisitedJobs from "../../views/pages/Administration/Jobs/UserJob/VisitedJobs";
-import ArchivedJobs from "../../views/pages/Administration/Jobs/UserJob/ArchivedJobs";
-import JobsDashboard from "../../views/pages/Administration/Jobs/JobDashboard";
-import ManageJobs from "../../views/pages/Administration/Jobs/ManageJobs";
-import ManageJobResumes from "../../views/pages/Administration/Jobs/ManageResumes";
-import ShortListCandidates from "../../views/pages/Administration/Jobs/ShortListCandidates";
-import InterviewingQuestions from "../../views/pages/Administration/Jobs/InterviewingQuestions";
-import OfferApprovals from "../../views/pages/Administration/Jobs/OfferApprovals";
-import ExperienceLevel from "../../views/pages/Administration/Jobs/ExperienceLevel";
-import CanditatesList from "../../views/pages/Administration/Jobs/CanditatesList";
-import ScheduleTiming from "../../views/pages/Administration/Jobs/ScheduleTiming.jsx";
-import AptitudeResults from "../../views/pages/Administration/Jobs/AptitudeResults";
-import Users from "../../views/pages/Administration/Users";
-import ProjectList from "../../views/pages/Employees/Projects/ProjectList";
-import ProjectView from "../../views/pages/Employees/Projects/ProjectView";
-import OffCanvas from "../../components/OffCanvas";
+import AdminDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/adminDashboard.jsx";
+import EmployeeDashboard from "../../views/pages/MainPages/Dashboard/EmployeeDashboard/index.jsx";
+import Chat from "../../views/pages/MainPages/Apps/chat/index.jsx";
+import VoiceCall from "../../views/pages/MainPages/Apps/calls/voiceCall/index.jsx";
+import VideoCall from "../../views/pages/MainPages/Apps/calls/VideoCall/index.jsx";
+import Outgoing from "../../views/pages/MainPages/Apps/calls/outgoingCall/index.jsx";
+import IncomingCall from "../../views/pages/MainPages/Apps/calls/incomingCall/index.jsx";
+import Calendar from "../../views/pages/MainPages/Apps/calendar/index.jsx";
+import Contacts from "../../views/pages/MainPages/Apps/contacts/index.jsx";
+import Email from "../../views/pages/MainPages/Apps/Email/index.jsx";
+import FileManager from "../../views/pages/MainPages/Apps/FileManager/index.jsx";
+import Compose from "../../views/pages/MainPages/Apps/Email/compose.jsx";
+import Estimates from "../../views/pages/HR/Sales/Estimates/index.jsx";
+import CreateEstimate from "../../views/pages/HR/Sales/Estimates/createEstimate.jsx";
+import EditEstimate from "../../views/pages/HR/Sales/Estimates/EditEstimate.jsx";
+import Invoices from "../../views/pages/HR/Sales/Invoices/Index.jsx";
+import CreateInvoice from "../../views/pages/HR/Sales/Invoices/createInvoice.jsx";
+import EditInvoice from "../../views/pages/HR/Sales/Invoices/editInvoice.jsx";
+import InvoiceView from "../../views/pages/HR/Sales/Invoices/invoiceView.jsx";
+import Payments from "../../views/pages/HR/Sales/payments/index.jsx";
+import Promotion from "../../views/pages/Performance/Promotion.jsx";
+import Resignation from "../../views/pages/Performance/Resignation.jsx";
+import Termination from "../../views/pages/Performance/Termination.jsx";
+import Components from "../../views/pages/Ui_Interface/Components/Components.jsx";
+import Settings from "../../views/pages/Administration/Settings/Settings.jsx";
+import Localization from "../../views/pages/Administration/Settings/Localization.jsx";
+import ThemeSettings from "../../views/pages/Administration/Settings/ThemeSettings.jsx";
+import RolesPermissions from "../../views/pages/Administration/Settings/RolesPermissions.jsx";
+import EmailSettings from "../../views/pages/Administration/Settings/EmailSettings.jsx";
+import PerformanceSetting from "../../views/pages/Administration/Settings/Performance/PerformanceSetting.jsx";
+import ApprovalSetting from "../../views/pages/Administration/Settings/ApprovalSetting.jsx";
+import InvoiceSettings from "../../views/pages/Administration/Settings/InvoiceSettings.jsx";
+import SalarySettings from "../../views/pages/Administration/Settings/SalarySettings.jsx";
+import NotificationSettings from "../../views/pages/Administration/Settings/NotificationSettings.jsx";
+import LeaveType from "../../views/pages/Administration/Settings/LeaveType.jsx";
+import ToxboxSetting from "../../views/pages/Administration/Settings/ToxboxSetting.jsx";
+import CronSetting from "../../views/pages/Administration/Settings/CronSetting.jsx";
+import AllEmpoyee from "../../views/pages/Employees/AllEmpoyee.jsx";
+import Holidays from "../../views/pages/Employees/Holidays.jsx";
+import AdminLeave from "../../views/pages/Employees/AdminLeave.jsx";
+import EmployeeLeave from "../../views/pages/Employees/EmployeeLeave.jsx";
+import LeaveSettings from "../../views/pages/Employees/LeaveSetting.jsx";
+import AttendenceAdmin from "../../views/pages/Employees/Attendenceadmin.jsx";
+import AttendanceEmployee from "../../views/pages/Employees/AttendenceEmployee.jsx";
+import Department from "../../views/pages/Employees/Department.jsx";
+import Designation from "../../views/pages/Employees/Designation.jsx";
+import TimeSheet from "../../views/pages/Employees/TimeSheet.jsx";
+import ShiftScheduling from "../../views/pages/Employees/ShiftandSchedule.jsx";
+import ShiftList from "../../views/pages/Employees/ShiftList.jsx";
+import OverTime from "../../views/pages/Employees/OverTime.jsx";
+import Clients from "../../views/pages/Employees/Clients.jsx";
+import Project from "../../views/pages/Employees/Projects/Project.jsx";
+import ClientList from "../../views/pages/Employees/ClientList.jsx";
+import Tasks from "../../views/pages/Employees/Projects/Tasks.jsx";
+import { SidebarProject } from "../../views/pages/Employees/Projects/SidebarProject.jsx";
+import TaskBoard from "../../views/pages/Employees/Projects/TaskBoard.jsx";
+import Leads from "../../views/pages/Employees/Leads.jsx";
+import Ticket from "../../views/pages/Employees/Ticket.jsx";
+import ClientProfile from "../../views/pages/Profile/ClientProfile.jsx";
+import Profile from "../../views/pages/Profile/Profile.jsx";
+import Subscribtions from "../../views/pages/Subscribtions/Subscribtions.jsx";
+import SubscribedCompany from "../../views/pages/Subscribtions/SubscribedCompany.jsx";
+import SubscribtionsCompany from "../../views/pages/Subscribtions/SubscribtionsCompany.jsx";
+import Search from "../../views/pages/Pages/Search/Search.jsx";
+import Faq from "../../views/pages/Pages/Faq.jsx";
+import Terms from "../../views/pages/Pages/Terms.jsx";
+import PrivacyPolicy from "../../views/pages/Pages/PrivacyPolicy.jsx";
+import BlankPage from "../../views/pages/Pages/BlankPage.jsx";
+import KnowledgeBase from "../../views/pages/Administration/Knowledgebase/KnowledgeBase.jsx";
+import KnowledgeBaseView from "../../views/pages/Administration/Knowledgebase/KnowledgeBaseView.jsx";
+import EmployeeList from "../../views/pages/Employees/EmployeeList.jsx";
+import Expenses from "../../views/pages/HR/Sales/Expenses/index.jsx";
+import Activities from "../../views/pages/Administration/Activities/index.jsx";
+import ProvidentFund from "../../views/pages/HR/Sales/ProvidentFund/index.jsx";
+import Taxes from "../../views/pages/HR/Sales/Taxes/index.jsx";
+import Categories from "../../views/pages/HR/Accounting/Categories/index.jsx";
+import SubCategory from "../../views/pages/HR/Accounting/Categories/subCategory.jsx";
+import Budgets from "../../views/pages/HR/Accounting/Budgets.jsx/index.jsx";
+import BudgetExpenses from "../../views/pages/HR/Accounting/BudgetExpenses/index.jsx";
+import BudgetRevenues from "../../views/pages/HR/Accounting/BudgetRevenue/index.jsx";
+import EmployeeSalary from "../../views/pages/HR/Payroll/EmployeeSalary.jsx/index.jsx";
+import PaySlip from "../../views/pages/HR/Payroll/Payslip/index.jsx";
+import PayrollItems from "../../views/pages/HR/Payroll/PayrollItems.jsx/index.jsx";
+import Policies from "../../views/pages/HR/Policies/index.jsx";
+import ExpenseReport from "../../views/pages/HR/Reports/ExpenseReport/index.jsx";
+import InvoiceReport from "../../views/pages/HR/Reports/InvoiceReport/index.jsx";
+import PaymentReport from "../../views/pages/HR/Reports/PaymentReport/index.jsx";
+import ProjectReport from "../../views/pages/HR/Reports/ProjectReport/index.jsx";
+import TaskReport from "../../views/pages/HR/Reports/TaskReport/index.jsx";
+import UserReport from "../../views/pages/HR/Reports/UserReport/index.jsx";
+import EmployeeReport from "../../views/pages/HR/Reports/EmployeeReports/index.jsx";
+import PaySlipReports from "../../views/pages/HR/Reports/PaySlipReports/index.jsx";
+import AttendanceReport from "../../views/pages/HR/Reports/AttendanceReport/index.jsx";
+import LeaveReport from "../../views/pages/HR/Reports/LeaveReport/index.jsx";
+import DailyReports from "../../views/pages/HR/Reports/DailyReports/index.jsx";
+import Assets from "../../views/pages/Administration/Assets/index.jsx";
+import UserDashboard from "../../views/pages/Administration/Jobs/UserJob/UserDashboard/index.jsx";
+import UserAllJobs from "../../views/pages/Administration/Jobs/UserJob/UserAllJobs/index.jsx";
+import SavedJobs from "../../views/pages/Administration/Jobs/UserJob/SavedJobs/index.jsx";
+import AppliedJobs from "../../views/pages/Administration/Jobs/UserJob/AppliedJobs/index.js";
+import Interviewing from "../../views/pages/Administration/Jobs/UserJob/Interviewing/index.jsx";
+import JobAptitude from "../../views/pages/Administration/Jobs/UserJob/JobAptitude/index.jsx";
+import Questions from "../../views/pages/Administration/Jobs/UserJob/Questions/index.jsx";
+import UserOfferedJobs from "../../views/pages/Administration/Jobs/UserJob/UserOfferedJobs/index.jsx";
+import VisitedJobs from "../../views/pages/Administration/Jobs/UserJob/VisitedJobs/index.jsx";
+import ArchivedJobs from "../../views/pages/Administration/Jobs/UserJob/ArchivedJobs/index.jsx";
+import JobsDashboard from "../../views/pages/Administration/Jobs/JobDashboard/index.jsx";
+import ManageJobs from "../../views/pages/Administration/Jobs/ManageJobs/index.jsx";
+import ManageJobResumes from "../../views/pages/Administration/Jobs/ManageResumes/index.jsx";
+import ShortListCandidates from "../../views/pages/Administration/Jobs/ShortListCandidates/index.jsx";
+import InterviewingQuestions from "../../views/pages/Administration/Jobs/InterviewingQuestions/index.jsx";
+import OfferApprovals from "../../views/pages/Administration/Jobs/OfferApprovals/index.jsx";
+import ExperienceLevel from "../../views/pages/Administration/Jobs/ExperienceLevel/index.jsx";
+import CanditatesList from "../../views/pages/Administration/Jobs/CanditatesList/index.jsx";
+import ScheduleTiming from "../../views/pages/Administration/Jobs/ScheduleTiming.jsx/index.jsx";
+import AptitudeResults from "../../views/pages/Administration/Jobs/AptitudeResults/index.jsx";
+import Users from "../../views/pages/Administration/Users/index.jsx";
+import ProjectList from "../../views/pages/Employees/Projects/ProjectList.jsx";
+import ProjectView from "../../views/pages/Employees/Projects/ProjectView.jsx";
+import OffCanvas from "../../components/OffCanvas.jsx";
 import FormSelectTwo from "../../views/pages/Ui_Interface/Forms/FormSelectTwo.jsx";
 import FileUpload from "../../views/pages/Ui_Interface/Forms/FileUpload.jsx";
 import Ribbon from "../../views/pages/Ui_Interface/Elements/Ribbon.jsx";
@@ -199,8 +199,6 @@ import DealsDetails from "../../views/pages/Crm/DealsDetails.jsx";
 
 import RetentionStatistics from "../../views/pages/MainPages/Dashboard/AdminDashboard/RetentionStatistics.jsx";
 import GiftForEmployee from "../../views/pages/Employees/ForEmployee/GiftForEmployee.jsx";
-
-
 
 const AppContainer = () => {
   useEffect(() => {
@@ -915,20 +913,16 @@ const AppContainer = () => {
       element: <DealsDetails />,
     },
 
-
     {
       id: 132,
       path: "RetentionStatistics",
-      element: <RetentionStatistics/>,
+      element: <RetentionStatistics />,
     },
     {
       id: 133,
       path: "foremployee",
-      element: <GiftForEmployee/>,
+      element: <GiftForEmployee />,
     },
-
-
-
   ];
 
   const ChatRoutingeObjects = [
@@ -981,8 +975,6 @@ const AppContainer = () => {
       path: "mail-view",
       element: <EmailView />,
     },
-   
-  
   ];
   const SettingsRoutingeObjects = [
     {
@@ -1172,7 +1164,7 @@ const AppContainer = () => {
       element: <Users />,
     },
   ];
- 
+
   const SidebarLayout = () => (
     <>
       <Header />
@@ -1181,11 +1173,7 @@ const AppContainer = () => {
       <Outlet />
     </>
   );
-  const AuthendicationLayout = () => (
-    <div>
-      
-    </div>
-  );
+  const AuthendicationLayout = () => <div></div>;
   const ChatSidebarLayout = () => (
     <>
       <Header />
@@ -1205,7 +1193,6 @@ const AppContainer = () => {
       <Header />
       <EmailSidebar />
       <Outlet />
-      
     </>
   );
   const SettingsSidebarLayout = () => (
@@ -1244,7 +1231,6 @@ const AppContainer = () => {
               <Route key={item.id} path={item.path} element={item.element} />
             ))}
           </Route>
-          
 
           <Route path={"/*"} element={<ChatSidebarLayout />}>
             {ChatRoutingeObjects.map((item) => (

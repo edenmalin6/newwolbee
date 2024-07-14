@@ -1,4 +1,3 @@
-
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
@@ -8,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Applogo } from "../../../Routes/ImagePath";
-import { emailrgx } from "../Authentication/RegEx";
+import { emailrgx } from "./RegEx";
 // import { Applogo } from "../../../Routes/ImagePath";
 
 const schema = yup.object({
@@ -23,17 +22,23 @@ const schema = yup.object({
     .max(20, "Password must be at most 20 characters")
     .required("Password is required")
     .trim(),
-  id: yup
+  confirmPassword: yup
     .string()
-    .required("ID is required")
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required("Please confirm your password")
     .trim(),
+  id: yup.string().required("ID is required").trim(),
 });
 
-const Register = (props) => {
+const Register = () => {
   const [passwordEye, setPasswordEye] = useState(true);
   const [checkUser, setCheckUser] = useState(false);
   const [repeatPasswordEye, setRepeatPasswordEye] = useState(true);
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
@@ -41,11 +46,15 @@ const Register = (props) => {
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      const response = await axios.post("https://newwolbee-1.onrender.com/register", data);
+      // const response = await axios.post("https://newwolbee-1.onrender.com/register", data);
+      const response = await axios.post(
+        "http://localhost:4000/api/register",
+        data
+      );
       console.log(response.data); // אולי תרצה להציג הודעה למשתמש שההרשמה הצליחה
       setCheckUser(true);
       const managerId = data.id;
-      localStorage.setItem('managerId', managerId);
+      localStorage.setItem("managerId", managerId);
       navigate("/");
     } catch (error) {
       console.error("Error registering user:", error.response.data);
@@ -53,9 +62,13 @@ const Register = (props) => {
     }
   };
 
-
   return (
-    <div className="account-page" style={{ background: 'linear-gradient(to right, white, #FFC502, #FFEA00)' }}>
+    <div
+      className="account-page"
+      style={{
+        background: "linear-gradient(to right, white, #FFC502, #FFEA00)",
+      }}
+    >
       <div className="main-wrapper">
         <div className="account-content">
           <div className="container">
@@ -80,8 +93,9 @@ const Register = (props) => {
                         control={control}
                         render={({ field: { value, onChange } }) => (
                           <input
-                            className={`form-control ${errors?.email ? "error-input" : ""
-                              }`}
+                            className={`form-control ${
+                              errors?.email ? "error-input" : ""
+                            }`}
                             type="text"
                             value={value}
                             onChange={onChange}
@@ -110,8 +124,9 @@ const Register = (props) => {
                           >
                             <input
                               type={passwordEye ? "password" : "text"}
-                              className={`form-control  ${errors?.password ? "error-input" : ""
-                                }`}
+                              className={`form-control  ${
+                                errors?.password ? "error-input" : ""
+                              }`}
                               value={value}
                               onChange={onChange}
                               autoComplete="false"
@@ -123,8 +138,9 @@ const Register = (props) => {
                                 top: "30%",
                               }}
                               onClick={() => setPasswordEye(!passwordEye)}
-                              className={`fa toggle-password ${passwordEye ? "fa-eye-slash" : "fa-eye"
-                                }`}
+                              className={`fa toggle-password ${
+                                passwordEye ? "fa-eye-slash" : "fa-eye"
+                              }`}
                             />
                           </div>
                         )}
@@ -137,9 +153,9 @@ const Register = (props) => {
                     </div>
 
                     <div className="input-block mb-3">
-                      <label className="col-form-label">Repeat Password</label>
+                      <label className="col-form-label">Confirm Password</label>
                       <Controller
-                        name="repeatepassword"
+                        name="confirmPassword"
                         control={control}
                         render={({ field: { value, onChange } }) => (
                           <div
@@ -148,8 +164,9 @@ const Register = (props) => {
                           >
                             <input
                               type={repeatPasswordEye ? "password" : "text"}
-                              className={`form-control  ${errors?.repeatPassword ? "error-input" : ""
-                                }`}
+                              className={`form-control  ${
+                                errors?.repeatPassword ? "error-input" : ""
+                              }`}
                               value={value}
                               onChange={onChange}
                               autoComplete="false"
@@ -163,8 +180,9 @@ const Register = (props) => {
                               onClick={() =>
                                 setRepeatPasswordEye(!repeatPasswordEye)
                               }
-                              className={`fa toggle-password ${repeatPasswordEye ? "fa-eye-slash" : "fa-eye"
-                                }`}
+                              className={`fa toggle-password ${
+                                repeatPasswordEye ? "fa-eye-slash" : "fa-eye"
+                              }`}
                             />
                           </div>
                         )}
@@ -183,21 +201,26 @@ const Register = (props) => {
                         control={control}
                         render={({ field: { value, onChange } }) => (
                           <input
-                            className={`form-control ${errors?.id ? "error-input" : ""
-                              }`}
-                            type="text"
+                            className={`form-control ${
+                              errors?.id ? "error-input" : ""
+                            }`}
+                            type="number"
                             value={value}
                             onChange={onChange}
                             autoComplete="false"
                           />
                         )}
                       />
-                      <span className="text-danger">
-                        {errors?.id?.message}
-                      </span>
+                      <span className="text-danger">{errors?.id?.message}</span>
                     </div>
 
-                    <div className="input-block text-center"  style={{ background: 'linear-gradient(to right, white, #FFC502, #FFEA00)'}}>
+                    <div
+                      className="input-block text-center"
+                      style={{
+                        background:
+                          "linear-gradient(to right, white, #FFC502, #FFEA00)",
+                      }}
+                    >
                       <Link
                         to="#"
                         className="btn btn-primary account-btn"
@@ -224,4 +247,4 @@ const Register = (props) => {
   );
 };
 
-export default Register
+export default Register;

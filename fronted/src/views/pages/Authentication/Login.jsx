@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import { useDispatch } from "react-redux";
 import { login } from "../../../user";
 import { resetFunctionwithlogin } from "../../../components/ResetFunction";
+import axios from "axios";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -45,25 +46,30 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch('https://newwolbee-1.onrender.com/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email: data.email, password: data.password })
+      // const response = await axios.post('https://newwolbee-1.onrender.com/login', {
+            const response = await axios.post('http://localhost:4000/api/login', {
+        email: data.email,
+         password: data.password
       });
   
-      const result = await response.json();
-  
-      if (response.ok) {
+      const result = await response.data;
+
+      if (response.status === 200) {
         setIsUserExist(true);
         const Value = {
           email: data.email,
           password: data.password,
+          role: result.role
         };
         dispatch(login(Value));
         localStorage.setItem("credencial", JSON.stringify(Value));
-        navigate("/myDashboard");
+        localStorage.setItem("userRole", (Value.role));
+        if (result.role === "manager"){
+          navigate("/hrDashboard")
+        }else{
+          navigate("/myDashboard"); 
+        } 
+     
         resetFunctionwithlogin();
       } else {
         setEmailError(true);
@@ -125,7 +131,7 @@ const Login = () => {
                               className={`form-control ${
                                 errors?.email ? "error-input" : ""
                               }`}
-                              type="text"
+                              type="email"
                               defaultValue={localStorage.getItem("email")}
                               onChange={field.onChange}
                               value={field.value}

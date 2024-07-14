@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import AppContainer from "../Appcontainer";
 import store from "../../store";
 import { Provider } from "react-redux";
@@ -42,7 +42,7 @@ import Typography from "../../views/pages/Ui_Interface/Components/Typography";
 import Videos from "../../views/pages/Ui_Interface/Components/Videos";
 import Lightbox from "../../views/pages/Ui_Interface/Components/Lightbox";
 import Carousel from "../../views/pages/Ui_Interface/Components/Carousel";
-import { Navigate } from "react-router-dom/dist";
+import { Navigate } from "react-router-dom";
 import Borders from "../../views/pages/Ui_Interface/Components/Borders";
 import Breadcrumb from "../../views/pages/Ui_Interface/Components/Breadcrumb";
 import Colors from "../../views/pages/Ui_Interface/Components/colors";
@@ -57,6 +57,8 @@ import { SidebarData } from "../../views/layout/sidebardata";
 import PopUp from "../../views/pages/Employees/PopUp";
 import UserSettings from "../../views/pages/Authentication/UserSettings";
 import MyDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/MyDashboard";
+import MyStatistics from "../../views/pages/MainPages/Dashboard/AdminDashboard/MyStatistics";
+import EmployeesData from "../../views/pages/MainPages/Dashboard/AdminDashboard/EmployeesData";
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -69,18 +71,20 @@ const ScrollToTop = () => {
 
 const AppRouter = () => {
   useEffect(() => {
-    localStorage.setItem("email", "admin@dreamstechnologies.com");
+    localStorage.setItem("email", "raye@gmail.com");
     localStorage.setItem("password", "123456");
   }, []);
   return (
     <div>
       <Provider store={store}>
-        <BrowserRouter >
+        <BrowserRouter>
           <ScrollToTop />
-          <PopUp/>
+          <PopUp />
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/myDashboard" element={<MyDashboard></MyDashboard>}/> 
+            <Route path="/myDashboard" element={<MyDashboard />} />
+            <Route path="/hrDashboard" element={<MyStatistics />} />
+            <Route path="/hr-employeesData" element={<EmployeesData />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/register" element={<Register />} />
             <Route path="/otp" element={<Otp />} />
@@ -88,7 +92,11 @@ const AppRouter = () => {
             <Route path="/error-500" element={<Error500 />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/under-maintenance" element={<UnderManitenance />} />
-            <Route path="/sidebar" element={<Sidebar></Sidebar>}  data={SidebarData}/>
+            <Route
+              path="/sidebar"
+              element={<Sidebar></Sidebar>}
+              data={SidebarData}
+            />
             <Route path="/job-list" element={<JobList />} />
             <Route path="/job-view" element={<JobView />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -129,8 +137,13 @@ const AppRouter = () => {
             <Route path="/spinner" element={<Spinner />} />
             <Route path="/*" element={<AppContainer />} />
             <Route path="*" element={<Navigate to="/" />} />
-            <Route path="/settings" element={<UserSettings/>}/>
-            <Route path='/foremployee' element={<GiftForEmployee></GiftForEmployee>}> </Route>
+            <Route path="/settings" element={<UserSettings />} />
+            <Route
+              path="/foremployee"
+              element={<GiftForEmployee></GiftForEmployee>}
+            >
+              {" "}
+            </Route>
           </Routes>
         </BrowserRouter>
       </Provider>

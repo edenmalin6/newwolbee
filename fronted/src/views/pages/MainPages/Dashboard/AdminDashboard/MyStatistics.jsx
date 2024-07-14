@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   PieChart,
   Pie,
@@ -14,20 +15,46 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-import lisa from '../../../../../imgs/avatar_1.JPG'
-import tom from '../../../../../imgs/avatar_2.JPG'
-import david from '../../../../../imgs/avatar_3.JPG'
-import nicole from '../../../../../imgs/avatar_4.JPG'
-import brad from '../../../../../imgs/avatar_5.JPG'
-import john from '../../../../../imgs/avatar_6.JPG'
-import mark from '../../../../../imgs/avatar_7.JPG'
-import josh from '../../../../../imgs/avatar_8.JPG'
-import justin from '../../../../../imgs/avatar_9.JPG'
-import selena from '../../../../../imgs/avatar_10.JPG'
-import emma from '../../../../../imgs/avatar_11.JPG'
-import sofia from '../../../../../imgs/avatar_12.JPG'
+import lisa from "../../../../../imgs/avatar_1.JPG";
+import tom from "../../../../../imgs/avatar_2.JPG";
+import david from "../../../../../imgs/avatar_3.JPG";
+import nicole from "../../../../../imgs/avatar_4.JPG";
+import brad from "../../../../../imgs/avatar_5.JPG";
+import john from "../../../../../imgs/avatar_6.JPG";
+import mark from "../../../../../imgs/avatar_7.JPG";
+import josh from "../../../../../imgs/avatar_8.JPG";
+import justin from "../../../../../imgs/avatar_9.JPG";
+import selena from "../../../../../imgs/avatar_10.JPG";
+import emma from "../../../../../imgs/avatar_11.JPG";
+import sofia from "../../../../../imgs/avatar_12.JPG";
+import Select from "react-select";
+import { AlignCenter } from "react-feather";
+import Header from "../../../../layout/Header";
+import AdminDashboard from "./adminDashboard"; //?  should i include this one?
 
 export default function MyStatistics() {
+  const [selectedTeam, setSelectedTeam] = useState("");
+  const [values, setValues] = useState([]);
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/api/teams");
+        setValues(response.data);
+      } catch (error) {
+        console.error("Error fetching team :", error);
+      }
+    };
+    fetchTeams();
+
+    const role = localStorage.getItem("userRole");
+    setUser(role);
+  }, []);
+
+  const handleSelect = (option) => {
+    setSelectedTeam(option.value);
+  };
   const PieChartWithPercentage = ({ percentage }) => {
     const data = [
       { name: "Completed", value: percentage },
@@ -214,7 +241,7 @@ export default function MyStatistics() {
         id: 2,
         name: "Tom",
         hours: 138,
-        image: tom ,
+        image: tom,
       },
       {
         id: 3,
@@ -248,28 +275,28 @@ export default function MyStatistics() {
           Employees Over 100% Hours
         </h5>
         <div className="row">
-  {employees.map((employee) => (
-    <div
-      key={employee.id}
-      className="d-flex flex-row mb-3 justify-content-center"
-    >
-      <div className="card-body d-flex align-items-center w-100">
-        <img
-          className="card-img-left"
-          src={employee.image}
-          alt={employee.name}
-          style={{ height: '50px', width: '50px', marginRight: '15px' }}
-        />
-        <div>
-          <h3 style={{ margin: 0 }}>{employee.name}</h3>
-          {employee.hours > 100 && (
-            <span className="badge badge-danger">Over 100% Hours</span>
-          )}
+          {employees.map((employee) => (
+            <div
+              key={employee.id}
+              className="d-flex flex-row mb-3 justify-content-center"
+            >
+              <div className="card-body d-flex align-items-center w-100">
+                <img
+                  className="card-img-left"
+                  src={employee.image}
+                  alt={employee.name}
+                  style={{ height: "50px", width: "50px", marginRight: "15px" }}
+                />
+                <div>
+                  <h3 style={{ margin: 0 }}>{employee.name}</h3>
+                  {employee.hours > 100 && (
+                    <span className="badge badge-danger">Over 100% Hours</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-    </div>
-  ))}
-</div>
       </div>
     );
   };
@@ -370,7 +397,7 @@ export default function MyStatistics() {
         "linear-gradient(90deg, hsla(180, 54%, 44%, 1) 17%, hsla(319, 48%, 82%, 1) 92%)",
     },
     bgVacation: {
-      height:'190px',
+      height: "190px",
       background:
         "linear-gradient(90deg, hsla(251, 54%, 44%, 1) 26%, hsla(264, 44%, 46%, 1) 46%, hsla(282, 35%, 49%, 1) 63%, hsla(319, 44%, 60%, 1) 92%)",
     },
@@ -395,380 +422,419 @@ export default function MyStatistics() {
 
   return (
     <>
-      <div class="container-fluid ">
-        <div className="row">
-          <div className="col-sm-12  col-md-6 col-lg-3  ">
-            <div
-              className="card justify-content-center  mb-3"
-              style={{ ...styles.bgMonthly }}
-            >
-              <div className="row g-0">
-                <div className="col-md-8">
-                  <div className="card-body ">
-                    <h5 className="card-title">Monthly Team-Building</h5>
-                    <h5 className="card-title">Activities </h5>
-                    <h1>0</h1>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <img
-                    src={styles.images.monthly.src}
-                    className="img-fluid rounded-start"
-                    alt="..."
-                  />
+      <div className="page-wrapper">
+        <div className="content container-fluid">
+          <Header />
+        </div>
+      </div>
+      {user === "manager" && (
+        <div>
+       <AdminDashboard /> 
+        <div className="d-flex justify-content-center">
+          <Select
+            options={values.map((team) => ({
+              value: team,
+              label: team.name,
+            }))}
+            onChange={handleSelect}
+            placeholder="Select a team"
+            className="w-50 m-3"
+          />
+        </div>
+        </div>
+        
+      )}
+
+      <div className="row">
+        <div className="col-sm-12  col-md-6 col-lg-3  ">
+          <div
+            className="card justify-content-center  mb-3"
+            style={{ ...styles.bgMonthly }}
+            ma
+          >
+            <div className="row g-0">
+              <div className="col-md-8">
+                <div className="card-body ">
+                  <h5 className="card-title">Monthly Team-Building</h5>
+                  <h5 className="card-title">Activities </h5>
+                  <h1>
+                    {selectedTeam
+                      ? selectedTeam["Monthly Team Building Activities"]
+                      : "0"}
+                  </h1>
                 </div>
               </div>
-            </div>
-            <div
-              className="card justify-content-center  mb-3"
-              style={{ ...styles.bgPersonal }}
-            >
-              <div className="row g-0">
-                <div className="col-md-8">
-                  <div className="card-body " style={{ ...customHeight(250) }}>
-                    <h5 className="card-title"> Personal Development plan</h5>
-                    <h1>4/8</h1>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <img
-                    src={styles.images.personal.src}
-                    className="img-fluid rounded-start"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-12 col-md-12 col-lg-12">
-              <div
-                className="card  mb-3"
-                style={{ ...styles.bgBirthdays, ...customHeight(320) }}
-              >
-                <div className="row g-0">
-                  <div className="col-md-8">
-                    <div className="card-body">
-                      <h5 className="card-title">Upcoming Birthdays</h5>
-                      <div className="d-flex">
-                        <div className="">
-                          <div>img</div>
-                          <div>
-                            <h2>7/18</h2>
-                          </div>
-                          <div>
-                            <h2>(27)</h2>
-                          </div>
-                        </div>
-                        <div>
-                          <div>img</div>
-                          <div>
-                            <h2>7/18</h2>
-                          </div>
-                          <div>
-                            <h2>(27)</h2>
-                          </div>
-                        </div>
-                        <div>
-                          <div> img</div>
-                          <div>
-                            <h2>7/18</h2>
-                          </div>
-                          <div>
-                            <h2>(27)</h2>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div className="col-md-4">
+                <img
+                  src={styles.images.monthly.src}
+                  className="img-fluid rounded-start"
+                  alt="..."
+                />
               </div>
             </div>
           </div>
-
-          <div className="col-sm-12 col-md-6 col-lg-6 ">
-            <div className="col">
-              <div
-                class="card"
-                style={{ ...styles.bgPercent, ...customHeight(380) }}
-              >
-                <PieChartWithPercentage percentage={40} />
-                <div class="card-body text-center">
-                  <h5 class="card-title">Spent Budget</h5>
-                  <h1>%800</h1>
+          <div
+            className="card justify-content-center  mb-3"
+            style={{ ...styles.bgPersonal }}
+          >
+            <div className="row g-0">
+              <div className="col-md-8">
+                <div className="card-body " style={{ ...customHeight(250) }}>
+                  <h5 className="card-title"> Personal Development plan</h5>
+                  <h1>
+                    {selectedTeam
+                      ? selectedTeam["Personal Development Plan"]
+                      : "0"}
+                  </h1>
                 </div>
               </div>
-            </div>
-
-            <div className="col-sm-12 col-md-12 col-lg-12">
-              <div className="card mb-3" style={styles.bgSick}>
-                <div className="row g-0">
-                  <div className="col-md-8">
-                    <div className="card-body">
-                      <h5 className="card-title">Frequent Sick Leave</h5>
-                      <h5 className="card-title">3/8</h5>
-                    </div>
-                  </div>
-                  <div className="col-md-4">
-                    <img
-                      src={styles.images.sick.src}
-                      className="img-fluid rounded-start"
-                      alt="..."
-                    />
-                  </div>
-                </div>
+              <div className="col-md-4">
+                <img
+                  src={styles.images.personal.src}
+                  className="img-fluid rounded-start"
+                  alt="..."
+                />
               </div>
             </div>
-
-            <div className="col-sm-12 col-md-12 col-lg-12" style={{height:'100px'}}>
-              <div className="card mb-3 " style={styles.bgVacation}>
-                <div className="row g-0">
-                  <div className="col-md-8">
-                    <div className="card-body d-flex">
-                      <h5 className="card-title">Low Vacation Leave</h5>
+          </div>
+          <div className="col-sm-12 col-md-12 col-lg-12">
+            <div
+              className="card  mb-3"
+              style={{ ...styles.bgBirthdays, ...customHeight(320) }}
+            >
+              <div className="row g-0">
+                <div className="col-md-8">
+                  <div className="card-body">
+                    <h5 className="card-title">Upcoming Birthdays</h5>
+                    <div className="d-flex">
+                      <div className="">
+                        <div>img</div>
+                        <div>
+                          <h2>7/18</h2>
+                        </div>
+                        <div>
+                          <h2>(27)</h2>
+                        </div>
+                      </div>
                       <div>
-                        <h1 className="card-title">3/8</h1>
+                        <div>img</div>
+                        <div>
+                          <h2>7/18</h2>
+                        </div>
+                        <div>
+                          <h2>(27)</h2>
+                        </div>
+                      </div>
+                      <div>
+                        <div> img</div>
+                        <div>
+                          <h2>7/18</h2>
+                        </div>
+                        <div>
+                          <h2>(27)</h2>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-4">
-                    <img
-                      src={styles.images.vacation.src}
-                      className="img-fluid rounded-start"
-                      alt="..."
-                    />
-                  </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="col-sm-12 col-md-6 col-lg-3 ">
-            <div class="card " style={{ ...styles.bgSatisfaction }}>
-              <div class="card-body m-2">
-                <h5 class="card-title">Low Employees Satisfaction</h5>
-                <div className="row">
-                  <div className="col-4">
-                    <img
-                      src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
-                      width={50}
-                      alt=""
-                    />
-                  </div>
-                  <div className="col">
-                    <div
-                      style={{
-                        borderTop: "2px solid red",
-                        marginTop: "40px",
-                        minWidth: "60px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="col">
-                    <h4>45</h4>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-4">
-                    <img
-                      src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
-                      width={50}
-                      alt=""
-                    />
-                  </div>
-                  <div className="col">
-                    <div
-                      style={{
-                        borderTop: "2px solid red",
-                        marginTop: "40px",
-                        minWidth: "60px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="col">
-                    <h4>45</h4>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-4">
-                    <img
-                      src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
-                      width={50}
-                      alt=""
-                    />
-                  </div>
-                  <div className="col">
-                    <div
-                      style={{
-                        borderTop: "2px solid red",
-                        marginTop: "40px",
-                        minWidth: "60px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="col">
-                    <h4>45</h4>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-4">
-                    <img
-                      src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
-                      width={50}
-                      alt=""
-                    />
-                  </div>
-                  <div className="col">
-                    <div
-                      style={{
-                        borderTop: "2px solid red",
-                        marginTop: "40px",
-                        minWidth: "60px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="col">
-                    <h4>45</h4>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-4">
-                    <img
-                      src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
-                      width={50}
-                      alt=""
-                    />
-                  </div>
-                  <div className="col">
-                    <div
-                      style={{
-                        borderTop: "2px solid red",
-                        marginTop: "40px",
-                        minWidth: "60px",
-                      }}
-                    ></div>
-                  </div>
-                  <div className="col">
-                    <h4>45</h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="card justify-content-center  mb-3 "
-              style={{ ...styles.bgGrowth, ...customHeight(420) }}
-            >
-              <div className="row g-0">
-                <div className="col-md-8">
-                  <div className="card-body ">
-                    <h5 className="card-title ">Personal Growth Programs</h5>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <img
-                    src={styles.images.growth.src}
-                    className="img-fluid rounded-start"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/*  */}
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-4  ">
-            {/* Turnover Rate */}
+        <div className="col-sm-12 col-md-6 col-lg-6 ">
+          <div className="col">
             <div
-              className="card  justify-content-center  mb-3"
-              // style={{ ...styles.bgMonthly }}
+              class="card"
+              style={{ ...styles.bgPercent, ...customHeight(380) }}
             >
-              <div className="row g-0">
-                <div className="col-md-12">
-                  <div className="card-body ">
-                    <TurnoverLineChart data={data} />
-                  </div>
-                </div>
+              <PieChartWithPercentage percentage={40} />
+              <div class="card-body text-center">
+                <h5 class="card-title">Spent Budget</h5>
+                <h1>{selectedTeam ? selectedTeam["Spent Budget"] : "0"}</h1>
               </div>
             </div>
+          </div>
 
-            <div
-              className="card justify-content-center   mb-3"
-              // style={{ ...styles.bgPersonal }}
-            >
+          <div className="col-sm-12 col-md-12 col-lg-12">
+            <div className="card mb-3" style={styles.bgSick}>
               <div className="row g-0">
-                <div className="col-md-12 ">
-                  <div className="card-body ">
-                    <ColumnChart />
+                <div className="col-md-8">
+                  <div className="card-body">
+                    <h5 className="card-title">Frequent Sick Leave</h5>
+                    <h5 className="card-title">
+                      {selectedTeam ? selectedTeam["Frequent Sick Leave"] : "0"}
+                    </h5>
                   </div>
+                </div>
+                <div className="col-md-4">
+                  <img
+                    src={styles.images.sick.src}
+                    className="img-fluid rounded-start"
+                    alt="..."
+                  />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="col-8 ">
-            <div className="col">
-              <div
-                class="card"
-                style={{ ...styles.bgTeamSatisfaction, ...customHeight(380) }}
-              >
-                <div class="card-body text-center">
-                  <TeamSatisfaction />
+          <div
+            className="col-sm-12 col-md-12 col-lg-12"
+            style={{ height: "100px" }}
+          >
+            <div className="card mb-3 " style={styles.bgVacation}>
+              <div className="row g-0">
+                <div className="col-md-8">
+                  <div className="card-body d-flex">
+                    <h5 className="card-title">Low Vacation Leave</h5>
+                    <div>
+                      <h1 className="card-title">
+                        {selectedTeam
+                          ? selectedTeam["Low Vacation Leave"]
+                          : "0"}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-4">
+                  <img
+                    src={styles.images.vacation.src}
+                    className="img-fluid rounded-start"
+                    alt="..."
+                  />
                 </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className="col-sm-12 col-md-12 col-lg-12">
+        <div className="col-sm-12 col-md-6 col-lg-3 ">
+          <div class="card " style={{ ...styles.bgSatisfaction }}>
+            <div class="card-body m-2">
+              <h5 class="card-title">Low Employees Satisfaction</h5>
               <div className="row">
+                <div className="col-4">
+                  <img
+                    src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
+                    width={50}
+                    alt=""
+                  />
+                </div>
                 <div className="col">
                   <div
-                    className="card justify-content-center  mb-3"
-                    // style={{ ...styles.bgPersonal }}
-                  >
-                    <div className="row g-0">
-                      <div className="col-md-12">
-                        <div className="card-body ">
-                          <EmployeeSatisfactionChart />
-                        </div>
+                    style={{
+                      borderTop: "2px solid red",
+                      marginTop: "40px",
+                      minWidth: "60px",
+                    }}
+                  ></div>
+                </div>
+                <div className="col">
+                  <h4>45</h4>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-4">
+                  <img
+                    src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
+                    width={50}
+                    alt=""
+                  />
+                </div>
+                <div className="col">
+                  <div
+                    style={{
+                      borderTop: "2px solid red",
+                      marginTop: "40px",
+                      minWidth: "60px",
+                    }}
+                  ></div>
+                </div>
+                <div className="col">
+                  <h4>45</h4>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-4">
+                  <img
+                    src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
+                    width={50}
+                    alt=""
+                  />
+                </div>
+                <div className="col">
+                  <div
+                    style={{
+                      borderTop: "2px solid red",
+                      marginTop: "40px",
+                      minWidth: "60px",
+                    }}
+                  ></div>
+                </div>
+                <div className="col">
+                  <h4>45</h4>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-4">
+                  <img
+                    src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
+                    width={50}
+                    alt=""
+                  />
+                </div>
+                <div className="col">
+                  <div
+                    style={{
+                      borderTop: "2px solid red",
+                      marginTop: "40px",
+                      minWidth: "60px",
+                    }}
+                  ></div>
+                </div>
+                <div className="col">
+                  <h4>45</h4>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-4">
+                  <img
+                    src="https://cdn3.iconfinder.com/data/icons/feather-5/24/user-128.png"
+                    width={50}
+                    alt=""
+                  />
+                </div>
+                <div className="col">
+                  <div
+                    style={{
+                      borderTop: "2px solid red",
+                      marginTop: "40px",
+                      minWidth: "60px",
+                    }}
+                  ></div>
+                </div>
+                <div className="col">
+                  <h4>45</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="card justify-content-center  mb-3 "
+            style={{ ...styles.bgGrowth, ...customHeight(420) }}
+          >
+            <div className="row g-0">
+              <div className="col-md-8">
+                <div className="card-body ">
+                  <h5 className="card-title ">Personal Growth Programs</h5>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <img
+                  src={styles.images.growth.src}
+                  className="img-fluid rounded-start"
+                  alt="..."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/*  */}
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-4  ">
+          {/* Turnover Rate */}
+          <div
+            className="card  justify-content-center  mb-3"
+            // style={{ ...styles.bgMonthly }}
+          >
+            <div className="row g-0">
+              <div className="col-md-12">
+                <div className="card-body ">
+                  <TurnoverLineChart data={data} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="card justify-content-center   mb-3"
+            // style={{ ...styles.bgPersonal }}
+          >
+            <div className="row g-0">
+              <div className="col-md-12 ">
+                <div className="card-body ">
+                  <ColumnChart />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-8 ">
+          <div className="col">
+            <div
+              class="card"
+              style={{ ...styles.bgTeamSatisfaction, ...customHeight(380) }}
+            >
+              <div class="card-body text-center">
+                <TeamSatisfaction />
+              </div>
+            </div>
+          </div>
+
+          <div className="col-sm-12 col-md-12 col-lg-12">
+            <div className="row">
+              <div className="col">
+                <div
+                  className="card justify-content-center  mb-3"
+                  // style={{ ...styles.bgPersonal }}
+                >
+                  <div className="row g-0">
+                    <div className="col-md-12">
+                      <div className="card-body ">
+                        <EmployeeSatisfactionChart />
                       </div>
                     </div>
-                    {/*  */}
-                    <div
-                      className="card justify-content-center text-center  mb-3"
-                      style={{ ...styles.bgPersonal }}
-                    >
-                      <div className="row g-0">
-                        <div className="col-md-8">
-                          <div
-                            className="card-body "
-                            style={{ ...customHeight(250) }}
-                          >
-                            <h1>4/8</h1>
-                            <h5 className="card-title"> Conversations 1:1</h5>
-                          </div>
+                  </div>
+                  {/*  */}
+                  <div
+                    className="card justify-content-center text-center  mb-3"
+                    style={{ ...styles.bgPersonal }}
+                  >
+                    <div className="row g-0">
+                      <div className="col-md-8">
+                        <div
+                          className="card-body "
+                          style={{ ...customHeight(250) }}
+                        >
+                          <h1>4/8</h1>
+                          <h5 className="card-title"> Conversations 1:1</h5>
                         </div>
-                        <div className="col-md-4">
-                          <img
-                            src={styles.images.converction.src}
-                            className="img-fluid rounded-start"
-                            alt="..."
-                          />
-                        </div>
+                      </div>
+                      <div className="col-md-4">
+                        <img
+                          src={styles.images.converction.src}
+                          className="img-fluid rounded-start"
+                          alt="..."
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div className="col">
-                  <div
-                    className="card justify-content-center  mb-3"
-                    style={{ ...styles.bgOverHours }}
-                  >
-                    <div className="row g-0">
-                      <div className="col-md-12">
-                        <div className="card-body ">
-                          <EmployeeList />
-                        </div>
+              <div className="col">
+                <div
+                  className="card justify-content-center  mb-3"
+                  style={{ ...styles.bgOverHours }}
+                >
+                  <div className="row g-0">
+                    <div className="col-md-12">
+                      <div className="card-body ">
+                        <EmployeeList />
                       </div>
                     </div>
                   </div>

@@ -3,52 +3,59 @@ import Sidebar from "../../layout/Sidebar";
 import Header from "../../layout/Header";
 import { CiCirclePlus } from "react-icons/ci";
 import { CiTrash } from "react-icons/ci";
-import {useSpring, animated} from "@react-spring/web"
-
-
+import { useSpring, animated } from "@react-spring/web";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import dayjs from "dayjs";
 
 const UserSettings = () => {
-    const [updateProfilePic, setUpdateProfilePic] = useState("") //get profile pic from local storage
-    const [removePicPopup, setRemovePicPopup] = useState("");
-    const [activeTab, setActiveTab] = useState("Notifications");
-    const [slideProps, api] = useSpring(() => ({ transform: 'translateX(0%)' }));
+  const [updateProfilePic, setUpdateProfilePic] = useState(""); //get profile pic from local storage
+  const [removePicPopup, setRemovePicPopup] = useState("");
+  const [activeTab, setActiveTab] = useState("Notifications");
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [frequency, setFrequency] = useState("Daily");
+  const [notificationRepeat, setNotificationRepeat] = useState("3 Times");
+  const [slideProps, api] = useSpring(() => ({
+    transform: "translateX(0%)",
+  }));
 
-    useEffect(()=>{
-        const currentProfilePic = localStorage.getItem("profilePic");
-         if (currentProfilePic) {
-         setUpdateProfilePic(currentProfilePic);
+  useEffect(() => {
+    const currentProfilePic = localStorage.getItem("profilePic");
+    if (currentProfilePic) {
+      setUpdateProfilePic(currentProfilePic);
     }
-       
-    },[])
+  }, []);
 
-    const triggerFileInput = () => {
-        document.getElementById("profile-pic").click();
-      };    
+  const triggerFileInput = () => {
+    document.getElementById("profile-pic").click();
+  };
 
-      const handleUpdateProfile = (e) => {
-        const file = e.target.files[0];
-        setUpdateProfilePic(file);
-        localStorage.setItem("profilePic", file);
-        
-    }
-   
-    const handleRemoveProfile = (e) => {
-        e.stopPropagation();
-        e.preventDefault()
-        setUpdateProfilePic(null);
-        // localStorage.removeItem("profilePic");
-        setRemovePicPopup(false)
-      };
+  const handleUpdateProfile = (e) => {
+    const file = e.target.files[0];
+    setUpdateProfilePic(file);
+    localStorage.setItem("profilePic", file);
+  };
 
-      const handleTabClick = (tabName) => {
-        setActiveTab(tabName);
-        api.start({ transform: 'translateX(-100%)' });
-        setTimeout(() => {
-          api.set({ transform: 'translateX(100%)' });
-          api.start({ transform: 'translateX(0%)' });
-        }, 100);
-      };
+  const handleRemoveProfile = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setUpdateProfilePic(null);
+    // localStorage.removeItem("profilePic");
+    setRemovePicPopup(false);
+  };
 
+  const handleTabClick = (tabName) => {
+    setActiveTab(tabName);
+    api.start({ transform: "translateX(-100%)" });
+    setTimeout(() => {
+      api.set({ transform: "translateX(100%)" });
+      api.start({ transform: "translateX(0%)" });
+    }, 100);
+  };
   return (
     <div>
       <style>
@@ -136,7 +143,7 @@ const UserSettings = () => {
             padding: 20px;
             border-radius: 25px;
             height: 30rem;
-            width: 35rem;
+            width: 38rem;
           }
             .settings-container h1 {
             font-size: 26px;
@@ -208,18 +215,60 @@ const UserSettings = () => {
             color:black;
             font-size:18px;
           }
+            .notifications-settings{
+             display: "flex",
+              flexWrap: "wrap",
+              height: "350px",
+              overflow: "auto",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }
+              .notification-icons {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+              }
+
+              .icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 50px;
+                height: 50px;
+                border: 1px solid #ccc;
+                border-radius: 50%;
+              }
+
+              .notification-settings {
+                margin-top: 20px;
+              }
+
+              .checkbox-group {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              }
+
+              button {
+               margin: 5px;
+            padding: 10px 40px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #2196F3;
+              }
 }
       `}
       </style>
       <div className="page-wrapper">
-      <div className="content container-fluid">
-        <Header/>
-        <Sidebar/>
+        <div className="content container-fluid">
+          <Header />
+          <Sidebar />
         </div>
-        </div>
+      </div>
       <div className="settings-page-container">
-      <div className="user-profile-container">
-      <div className="profile-pic-wrapper">
+        <div className="user-profile-container">
+          <div className="profile-pic-wrapper">
             <input
               type="file"
               accept="/image/*"
@@ -233,61 +282,146 @@ const UserSettings = () => {
               className="profile-pic-label"
               style={{
                 backgroundImage: updateProfilePic
-                ? `url(${updateProfilePic})`
+                  ? `url(${updateProfilePic})`
                   : `url('/user-profile-icon.jpg')`,
               }}
             ></label>
             <div className="icon plus">
-              <CiCirclePlus size={24} 
-              onClick={triggerFileInput}/>
+              <CiCirclePlus size={24} onClick={triggerFileInput} />
             </div>
-            <div className="icon trash"
-            onClick={()=> setRemovePicPopup(true)}
-            >
+            <div className="icon trash" onClick={() => setRemovePicPopup(true)}>
               <CiTrash size={24} />
             </div>
           </div>
           <div>
-
-          <h2>Mike Ross</h2>
-          <p>Product Development Manager</p>
+            <h2>Mike Ross</h2>
+            <p>Product Development Manager</p>
+          </div>
         </div>
-      </div>
         <div className="settings-container">
-        <h1>Settings</h1>
-        <div className="tabs-container">
-                <div className={`tab ${activeTab === "Notifications" ? "active" : ""}`} onClick={() => handleTabClick("Notifications")}>Notifications</div>
-                <div className={`tab ${activeTab === "Language" ? "active" : ""}`} onClick={() => handleTabClick("Language")}>Language</div>
-                <div className={`tab ${activeTab === "App Preferences" ? "active" : ""}`} onClick={() => handleTabClick("App Preferences")}>App Preferences</div>
-              </div>
-              <animated.div style={slideProps}>
-                {activeTab === "Notifications" && (
-                  <div>
-                    <div className="toggle-container">
-                      <span>Email Notifications</span>
-                      <input type="checkbox" id="toggle1" className="toggle" />
-                      <label htmlFor="toggle1" className="toggle-label"></label>
-                    </div>
-                    <div className="toggle-container">
-                      <span>Desktop Notifications</span>
-                      <input type="checkbox" id="toggle2" className="toggle" />
-                      <label htmlFor="toggle2"></label>
-                    </div>
-                    <div className="toggle-container">
-                      <span>Phone Notifications</span>
-                      <input type="checkbox" id="toggle3" className="toggle" />
-                      <label htmlFor="toggle3"></label>
-                    </div>
-                    <div className="toggle-container">Notification Frequency</div>
-                    <div className="toggle-container">Remind Me Later</div>
-                  </div>
-                )}
-                {activeTab === "Language" && <div>Language Settings</div>}
-                {activeTab === "App Preferences" && <div>App Preferences Settings</div>}
-              </animated.div>
+          <h1>Settings</h1>
+          <div className="tabs-container">
+            <div
+              className={`tab ${activeTab === "Notifications" ? "active" : ""}`}
+              onClick={() => handleTabClick("Notifications")}
+            >
+              Notifications
+            </div>
+            <div
+              className={`tab ${activeTab === "Language" ? "active" : ""}`}
+              onClick={() => handleTabClick("Language")}
+            >
+              Language
+            </div>
+            <div
+              className={`tab ${
+                activeTab === "App Preferences" ? "active" : ""
+              }`}
+              onClick={() => handleTabClick("App Preferences")}
+            >
+              App Preferences
             </div>
           </div>
-    {removePicPopup && (
+          <animated.div style={slideProps}>
+            {activeTab === "Notifications" && (
+              <div className="notifications-selection">
+                <div className="toggle-container">
+                  <span>Email Notifications</span>
+                  <input type="checkbox" id="toggle1" className="toggle" />
+                  <label htmlFor="toggle1" className="toggle-label"></label>
+                </div>
+                <div className="toggle-container">
+                  <span>Desktop Notifications</span>
+                  <input type="checkbox" id="toggle2" className="toggle" />
+                  <label htmlFor="toggle2"></label>
+                </div>
+                <div className="toggle-container">
+                  <span>Phone Notifications</span>
+                  <input type="checkbox" id="toggle3" className="toggle" />
+                  <label htmlFor="toggle3"></label>
+                </div>
+
+                <div className="d-flex align-items-center justify-content-between">
+                  <span>Notification Frequency</span>
+                  <Select
+                    value={frequency}
+                    onChange={(e) => setFrequency(e.target.value)}
+                    displayEmpty
+                    sx={{ minWidth: 120, ml: 2 }}
+                  >
+                    <MenuItem value="Daily">Daily</MenuItem>
+                    <MenuItem value="Weekly">Weekly</MenuItem>
+                    <MenuItem value="Monthly">Monthly</MenuItem>
+                  </Select>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <TimePicker
+                      label="Select Time"
+                      defaultValue={dayjs("2024-04-17T15:30")}
+                      renderInput={(params) => (
+                        <TextField {...params} sx={{ minWidth: 120 }} />
+                      )}
+                      value={selectedTime}
+                      onChange={(newValue) => setSelectedTime(newValue)}
+                    />
+                  </LocalizationProvider>
+                </div>
+                <div className="d-flex align-items-center justify-content-between">
+                  <span>Notification Repeats</span>
+                  <Select
+                    value={notificationRepeat}
+                    onChange={(e) => setNotificationRepeat(e.target.value)}
+                    displayEmpty
+                    sx={{ minWidth: 120 }}
+                  >
+                    <MenuItem value="2 Times">2 Times</MenuItem>
+                    <MenuItem value="3 Times">3 Times</MenuItem>
+                    <MenuItem value="4 Times">4 Times</MenuItem>
+                  </Select>
+                </div>
+
+                <h3>Notifications Selection</h3>
+                <div className="d-flex ">
+                  <div className="icon">Birthdays</div>
+                  <div className="icon">Pregnancy</div>
+                  <div className="icon">Sick Leave</div>
+                  <div className="icon">Vacation Leave</div>
+                  <div className="icon">Engagement</div>
+                  <div className="icon">Work Routine Changes</div>
+                  <div className="icon">Important Dates and Events</div>
+                  <div className="icon">Important Life Events</div>
+                </div>
+                <div className="notification-settings">
+                  <h3>Birthdays</h3>
+                  <div className="checkbox-group">
+                    <label>
+                      <input type="checkbox" />
+                      Every Employee
+                    </label>
+                    <label>
+                      <input type="checkbox" />
+                      Only Managers
+                    </label>
+                    <label>
+                      <input type="checkbox" />
+                      No Managerial Attention
+                    </label>
+                    <label>
+                      <input type="checkbox" />
+                      Only Milestone
+                    </label>
+                  </div>
+                  <button>OK</button>
+                </div>
+              </div>
+            )}
+            {activeTab === "Language" && <div>Language Settings</div>}
+            {activeTab === "App Preferences" && (
+              <div>App Preferences Settings</div>
+            )}
+          </animated.div>
+        </div>
+      </div>
+      {removePicPopup && (
         <>
           <div className="popup">
             <p>Remove Profile Picture?</p>
@@ -301,4 +435,3 @@ const UserSettings = () => {
 };
 
 export default UserSettings;
-

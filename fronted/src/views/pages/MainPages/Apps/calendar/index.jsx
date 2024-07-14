@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import dayGridPlugin from "@fullcalendar/daygrid/index.js";
+import timeGridPlugin from "@fullcalendar/timegrid/index.js";
+import interactionPlugin from "@fullcalendar/interaction/index.js";
 import axios from "axios";
 import CalendarModal from "../../../../../components/modelpopup/CalendarModal";
 import { useLocation } from "react-router-dom";
@@ -14,21 +14,23 @@ const Calendar = (props) => {
   const linkRef = useRef(null);
   const eventName = location.state?.eventName;
   const openModal = location.state?.openModal;
-  console.log('Location state:', location.state); // הדפס את ערך ה-state של המיקום
-  console.log('Event name:', eventName); // הדפס את שם האירוע
+  console.log("Location state:", location.state); // הדפס את ערך ה-state של המיקום
+  console.log("Event name:", eventName); // הדפס את שם האירוע
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&mod=on&geo=none&year=now&m=50');
-        const hebrewEvents = response.data.items.map(event => ({
+        const response = await axios.get(
+          "https://www.hebcal.com/hebcal?v=1&cfg=json&maj=on&mod=on&geo=none&year=now&m=50"
+        );
+        const hebrewEvents = response.data.items.map((event) => ({
           title: event.title,
           start: event.date,
           className: "bg-warning",
         }));
         setEvents([...defaultEvents, ...hebrewEvents]);
       } catch (error) {
-        console.error('Error fetching Hebrew events:', error);
+        console.error("Error fetching Hebrew events:", error);
       }
     };
     fetchEvents();
@@ -106,7 +108,11 @@ const Calendar = (props) => {
                     {/* Calendar */}
                     <div id="calendar" />
                     <FullCalendar
-                      plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                      plugins={[
+                        dayGridPlugin,
+                        timeGridPlugin,
+                        interactionPlugin,
+                      ]}
                       headerToolbar={{
                         left: "prev,next today",
                         center: "title",
@@ -120,9 +126,13 @@ const Calendar = (props) => {
                       weekends={true}
                       events={events}
                       dateClick={(arg) => {
-                        const title = prompt('Enter event title:');
+                        const title = prompt("Enter event title:");
                         if (title) {
-                          addEvent({ title, start: arg.date, className: "bg-success" });
+                          addEvent({
+                            title,
+                            start: arg.date,
+                            className: "bg-success",
+                          });
                         }
                       }}
                     />

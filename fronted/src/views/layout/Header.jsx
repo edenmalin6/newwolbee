@@ -2,18 +2,28 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import notificationsData from "../../assets/json/notifications";
 import message from "../../assets/json/message";
-import { Avatar_02, Applogo, headerlogo, lnEnglish, lnFrench, lnGerman, lnSpanish } from "../../Routes/ImagePath";
+import {
+  Avatar_02,
+  Applogo,
+  headerlogo,
+  lnEnglish,
+  lnFrench,
+  lnGerman,
+  lnSpanish,
+} from "../../Routes/ImagePath";
 import { FaRegBell, FaRegComment } from "react-icons/fa";
-import { useLocation } from "react-router-dom/dist";
-import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
+import { useTranslation } from "../../../node_modules/react-i18next";
 import i18n from "../../i18n";
-import manager from '../../imgs/managerProfilePic.jpg'
+import manager from "../../imgs/managerProfilePic.jpg";
 
 const Header = (props) => {
-  const initialNotifications = notificationsData.notifications.map(notification => ({
-    ...notification,
-    read: false, // Initialize read status as false
-  }));
+  const initialNotifications = notificationsData.notifications.map(
+    (notification) => ({
+      ...notification,
+      read: false, // Initialize read status as false
+    })
+  );
 
   const datas = message.message;
   const [notifications, setNotifications] = useState(initialNotifications);
@@ -51,19 +61,21 @@ const Header = (props) => {
       lng === "en"
         ? lnEnglish
         : lng === "fr"
-          ? lnFrench
-          : lng === "es"
-            ? lnSpanish
-            : lnGerman
+        ? lnFrench
+        : lng === "es"
+        ? lnSpanish
+        : lnGerman
     );
   };
 
   const navigate = useNavigate();
 
   const notificationNav = (key) => {
-    const notification = notifications.find(notification => notification.id === key);
+    const notification = notifications.find(
+      (notification) => notification.id === key
+    );
     if (notification) {
-      if (notification.link.startsWith('http')) {
+      if (notification.link.startsWith("http")) {
         // If the link is an external URL, use window.location.href
         window.location.href = notification.link;
       } else {
@@ -73,17 +85,22 @@ const Header = (props) => {
     }
   };
 
-
   const markAsRead = (event, id) => {
     event.stopPropagation(); // Prevent event propagation to avoid closing the dropdown
-    setNotifications(notifications.map(notification =>
-      notification.id === id ? { ...notification, read: !notification.read } : notification
-    ));
+    setNotifications(
+      notifications.map((notification) =>
+        notification.id === id
+          ? { ...notification, read: !notification.read }
+          : notification
+      )
+    );
   };
 
   const deleteNotification = (event, id) => {
     event.stopPropagation(); // Prevent event propagation to avoid closing the dropdown
-    setNotifications(notifications.filter(notification => notification.id !== id));
+    setNotifications(
+      notifications.filter((notification) => notification.id !== id)
+    );
   };
 
   const clearAllNotifications = (event) => {
@@ -104,7 +121,10 @@ const Header = (props) => {
   // Close notification when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
         setNotificationVisible(false);
       }
     };
@@ -118,7 +138,11 @@ const Header = (props) => {
     <div className="header" style={{ right: "0px" }}>
       <div className="header-left">
         <Link to="/admin-dashboard" className="logo">
-        <img src={Applogo} alt="img" style={{height:'42px',marginTop:'-12px'}} /> 
+          <img
+            src={Applogo}
+            alt="img"
+            style={{ height: "42px", marginTop: "-12px" }}
+          />
         </Link>
         <Link to="/admin-dashboard" className="logo2">
           <img src={Applogo} width={40} height={40} alt="img" />
@@ -131,12 +155,23 @@ const Header = (props) => {
           <span />
         </span>
       </Link> */}
-      <div className="page-title-box" style={{marginTop:'5px'}}>
-     <h4> Hi  <span style={{ fontWeight: 'bold', fontSize: '20px' }}>  {ProfileName ? `${ProfileName}` : "Admin"} </span>welcome back to wolbee </h4> 
-
-
+      <div className="page-title-box" style={{ marginTop: "5px" }}>
+        <h4>
+          {" "}
+          Hi{" "}
+          <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+            {" "}
+            {ProfileName ? `${ProfileName}` : "Admin"}{" "}
+          </span>
+          welcome back to wolbee{" "}
+        </h4>
       </div>
-      <Link id="mobile_btn" className="mobile_btn" to="#" onClick={() => document.body.classList.toggle("slide-nav")}>
+      <Link
+        id="mobile_btn"
+        className="mobile_btn"
+        to="#"
+        onClick={() => document.body.classList.toggle("slide-nav")}
+      >
         <i className="fa fa-bars" />
       </Link>
       <ul className="nav user-menu">
@@ -146,7 +181,11 @@ const Header = (props) => {
               <i className="fa fa-search" />
             </Link>
             <form>
-              <input className="form-control" type="text" placeholder="Search here" />
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Search here"
+              />
               <button className="btn" type="submit">
                 <i className="fa fa-search" />
               </button>
@@ -154,65 +193,137 @@ const Header = (props) => {
           </div>
         </li>
         <li className="nav-item dropdown has-arrow flag-nav">
-          <Link className="nav-link dropdown-toggle" data-bs-toggle="dropdown" to="#" role="button">
+          <Link
+            className="nav-link dropdown-toggle"
+            data-bs-toggle="dropdown"
+            to="#"
+            role="button"
+          >
             <img src={flagImage} alt="Flag" height="20" /> {t(i18n.language)}
           </Link>
           <div className="dropdown-menu dropdown-menu-right">
-            <Link to="#" className="dropdown-item" onClick={() => changeLanguage("en")}>
+            <Link
+              to="#"
+              className="dropdown-item"
+              onClick={() => changeLanguage("en")}
+            >
               <img src={lnEnglish} alt="Flag" height="16" /> English
             </Link>
-            <Link to="#" className="dropdown-item" onClick={() => changeLanguage("fr")}>
+            <Link
+              to="#"
+              className="dropdown-item"
+              onClick={() => changeLanguage("fr")}
+            >
               <img src={lnFrench} alt="Flag" height="16" /> French
             </Link>
-            <Link to="#" className="dropdown-item" onClick={() => changeLanguage("es")}>
+            <Link
+              to="#"
+              className="dropdown-item"
+              onClick={() => changeLanguage("es")}
+            >
               <img src={lnSpanish} alt="Flag" height="16" /> Spanish
             </Link>
-            <Link to="#" className="dropdown-item" onClick={() => changeLanguage("de")}>
+            <Link
+              to="#"
+              className="dropdown-item"
+              onClick={() => changeLanguage("de")}
+            >
               <img src={lnGerman} alt="Flag" height="16" /> German
             </Link>
           </div>
         </li>
         <li className="nav-item dropdown">
-          <Link to="/contacts" className="dropdown-toggle nav-link" data-bs-toggle="dropdown" onClick={handleNotification}>
-            <i><FaRegBell /></i> <span className="badge badge-pill">{notifications.length}</span>
+          <Link
+            to="/contacts"
+            className="dropdown-toggle nav-link"
+            data-bs-toggle="dropdown"
+            onClick={handleNotification}
+          >
+            <i>
+              <FaRegBell />
+            </i>{" "}
+            <span className="badge badge-pill">{notifications.length}</span>
           </Link>
-          <div ref={notificationRef} className={`dropdown-menu dropdown-menu-end notifications ${notificationVisible ? "show" : ""}`}>
+          <div
+            ref={notificationRef}
+            className={`dropdown-menu dropdown-menu-end notifications ${
+              notificationVisible ? "show" : ""
+            }`}
+          >
             <div className="topnav-dropdown-header">
               <span className="notification-title">Notifications</span>
-              <Link to="#" onClick={clearAllNotifications} className="clear-noti"> Clear All </Link>
+              <Link
+                to="#"
+                onClick={clearAllNotifications}
+                className="clear-noti"
+              >
+                {" "}
+                Clear All{" "}
+              </Link>
             </div>
             <div className="noti-content">
               <ul className="notification-list">
                 {notifications.map((notification) => (
-                  <li className="notification-message" key={notification.id}
-                    onClick={() => notificationNav(notification.id)}>
-                    <div className="media d-flex" style={{ paddingLeft: '7px' }}>
+                  <li
+                    className="notification-message"
+                    key={notification.id}
+                    onClick={() => notificationNav(notification.id)}
+                  >
+                    <div
+                      className="media d-flex"
+                      style={{ paddingLeft: "7px" }}
+                    >
                       <span className="avatar flex-shrink-0">
                         <img alt="" src={notification.image} />
                       </span>
                       <div className="media-body">
                         <p className="noti-details">
-                          <span className="noti-title" style={{ color: notification.read ? 'lightgray' : 'black' }}>{notification.contents_2}</span>
+                          <span
+                            className="noti-title"
+                            style={{
+                              color: notification.read ? "lightgray" : "black",
+                            }}
+                          >
+                            {notification.contents_2}
+                          </span>
                         </p>
                         <p className="noti-time">
-                          <span className="notification-time">{notification.time}</span>
+                          <span className="notification-time">
+                            {notification.time}
+                          </span>
                         </p>
-                        <div style={{ display: 'flex', gap: '10px', marginLeft: '100px' }}>
-                          <button onClick={(e) => markAsRead(e, notification.id)}
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "10px",
+                            marginLeft: "100px",
+                          }}
+                        >
+                          <button
+                            onClick={(e) => markAsRead(e, notification.id)}
                             style={{
-                              backgroundColor: 'white', border: 'none',
-                              color: '#FC133D', width: '110px'
-                            }}>
-                            {notification.read ? 'Mark as unread' : 'Mark as read'}
+                              backgroundColor: "white",
+                              border: "none",
+                              color: "#FC133D",
+                              width: "110px",
+                            }}
+                          >
+                            {notification.read
+                              ? "Mark as unread"
+                              : "Mark as read"}
                           </button>
-                          <button onClick={(e) => deleteNotification(e, notification.id)}
+                          <button
+                            onClick={(e) =>
+                              deleteNotification(e, notification.id)
+                            }
                             style={{
-                              backgroundColor: 'white', border: 'none',
-                              color: '#FC133D'
-                            }}>
+                              backgroundColor: "white",
+                              border: "none",
+                              color: "#FC133D",
+                            }}
+                          >
                             Delete
                           </button>
-
                         </div>
                       </div>
                     </div>
@@ -220,11 +331,14 @@ const Header = (props) => {
                 ))}
               </ul>
             </div>
-            <div className="topnav-dropdown-footer" style={{ lineHeight: '42px' }}>
+            <div
+              className="topnav-dropdown-footer"
+              style={{ lineHeight: "42px" }}
+            >
               <Link to="/contacts">View all Notifications</Link>
             </div>
-          </div >
-        </li >
+          </div>
+        </li>
         {/* <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
           <Link to="#" className="dropdown-toggle nav-link" data-bs-toggle="dropdown" onClick={toggleDropdown}>
             <i><FaRegComment /></i> <span className="badge badge-pill">8</span>
@@ -234,7 +348,7 @@ const Header = (props) => {
               <span className="notification-title">Messages</span>
               <Link to="#" className="clear-noti"> Clear All </Link>
             </div> */}
-            {/* <div className="noti-content">
+        {/* <div className="noti-content">
               <ul className="notification-list">
                 {datas.map((value, index) => (
                   <li className="notification-message" key={index}>
@@ -257,42 +371,67 @@ const Header = (props) => {
                 ))}
               </ul>
             </div> */}
-            {/* <div className="topnav-dropdown-footer">
+        {/* <div className="topnav-dropdown-footer">
               <Link onClick={() => localStorage.setItem("minheight", "true")} to="#">View all Messages</Link>
             </div>
           </div>
         </li> */}
         <li className="nav-item dropdown has-arrow main-drop">
-          <Link to="#" className="dropdown-toggle nav-link" data-bs-toggle="dropdown" onClick={handleProfile}>
+          <Link
+            to="#"
+            className="dropdown-toggle nav-link"
+            data-bs-toggle="dropdown"
+            onClick={handleProfile}
+          >
             <span className="user-img me-1">
               <img src={manager} alt="img" />
               <span className="status online" />
             </span>
             <span>{ProfileName ? `${ProfileName}` : "Admin"}</span>
           </Link>
-          <div className={`dropdown-menu dropdown-menu-end ${profile ? "show" : ""}`}>
-            <Link className="dropdown-item" to="/admin-dashboard">My Profile</Link>
-            <Link className="dropdown-item" to="/settings">Settings</Link>
-            <Link className="dropdown-item" to="/">Logout</Link>
+          <div
+            className={`dropdown-menu dropdown-menu-end ${
+              profile ? "show" : ""
+            }`}
+          >
+            <Link className="dropdown-item" to="/admin-dashboard">
+              My Profile
+            </Link>
+            <Link className="dropdown-item" to="/settings">
+              Settings
+            </Link>
+            <Link className="dropdown-item" to="/">
+              Logout
+            </Link>
           </div>
         </li>
-      </ul >
+      </ul>
       <div className="dropdown mobile-user-menu">
-        <Link to="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <Link
+          to="#"
+          className="nav-link dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
           <i className="fa fa-ellipsis-v" />
         </Link>
         <div className="dropdown-menu dropdown-menu-end dropdown-menu-right">
-          <Link className="dropdown-item" to="/admin-dashboard">My Profile</Link>
-          <Link className="dropdown-item" to="/settings">Settings</Link>
-          <Link className="dropdown-item" to="/">Logout</Link>
+          <Link className="dropdown-item" to="/admin-dashboard">
+            My Profile
+          </Link>
+          <Link className="dropdown-item" to="/settings">
+            Settings
+          </Link>
+          <Link className="dropdown-item" to="/">
+            Logout
+          </Link>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
 export default Header;
-
 
 // /* eslint-disable no-unused-vars */
 // /* eslint-disable react/prop-types */
