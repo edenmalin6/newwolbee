@@ -41,8 +41,8 @@ const AllEmployee = () => {
     sofia,
   ];
   const userRole = localStorage.getItem("userRole");
-  
-// get all employees from db
+
+  // get all employees from db
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -52,16 +52,21 @@ const AllEmployee = () => {
         );
         const employeesWithAvatars = response.data.map((employee, index) => ({
           ...employee,
+          id: employee._id,
           avatar: avatars[index % avatars.length],
         }));
         setEmployees(employeesWithAvatars);
+        const employeesArr = localStorage.setItem(
+          "employeesArr",
+          JSON.stringify(employeesWithAvatars)
+        );
       } catch (error) {
         console.log("Error fetching employees :", error);
       }
     };
     fetchEmployees();
   }, []);
-// get all team names from db
+  // get all team names from db
   useEffect(() => {
     const fetchTeams = async () => {
       try {
@@ -73,7 +78,7 @@ const AllEmployee = () => {
     };
     fetchTeams();
   }, []);
-//filter employees by team
+  //filter employees by team
   useEffect(() => {
     if (selectedTeam) {
       const filteredTeam = employees.filter(
@@ -84,13 +89,12 @@ const AllEmployee = () => {
       setFilteredEmployees(employees);
     }
   }, [selectedTeam, employees]);
-  
 
   const handleSelect = (option) => {
     setSelectedTeam(option.value);
   };
   const toggleFavorite = (e, employeeId) => {
-    e.preventDefault(); 
+    e.preventDefault();
     const updatedFavoriteEmployees = [...favoriteEmployees]; // העתקת רשימת העובדים המועדפים
 
     if (updatedFavoriteEmployees.includes(employeeId)) {
@@ -129,40 +133,44 @@ const AllEmployee = () => {
             modal="#add_employee"
             name="Add Employee"
           />
-          {userRole !== "manager" && <EmployeeListFilter />}
-          
-          <div className="d-flex justify-content-center">
-        <Select
-          options={values.map((team) => ({
-            value: team,
-            label: team.name,
-          }))}
-          onChange={handleSelect}
-          placeholder="Select a team"
-          className="w-50 m-3"
-        />
-      </div>
+          {userRole !== "manager" &&
 
+           <EmployeeListFilter />}
+            {userRole === "manager" &&
+              <div className="d-flex justify-content-center">
+            <Select
+              options={values.map((team) => ({
+                value: team._id,
+                label: team.name,
+              }))}
+              onChange={handleSelect}
+              placeholder="Select a team"
+              className="w-50 m-3"
+            />
+          </div>}
+         
           <div className="row">
             {filteredEmployees.map((employee, index) => (
               <div
-                key={employee.id}
+                key={employee._id}
                 className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3"
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.transform = "scale(1.05)")
                 }
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
               >
                 <div className="profile-widget">
                   <div className="profile-img">
                     <Link
-                      to={`/profile/${employee.id}`}
+                      to={`/profile/${employee._id}`}
                       className="avatar"
-                      onClick={(event) => toggleFavorite(event, employee.id)}
+                      onClick={(event) => toggleFavorite(event, employee._id)}
                     >
                       <span
                         className={`favorite-star ${
-                          favoriteEmployees.includes(employee.id)
+                          favoriteEmployees.includes(employee._id)
                             ? "active"
                             : ""
                         }`}
@@ -204,7 +212,7 @@ const AllEmployee = () => {
                     </div>
                   </div>
                   <h4 className="user-name m-t-10 mb-0 text-ellipsis">
-                    <Link to={`/profile/${employee.id}`}>
+                    <Link to={`/profile/${employee._id}`}>
                       {employee.fullName}
                     </Link>
                   </h4>

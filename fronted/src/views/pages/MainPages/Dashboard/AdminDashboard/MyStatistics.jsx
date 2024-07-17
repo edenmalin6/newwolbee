@@ -426,11 +426,9 @@ export default function MyStatistics() {
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Header />
-          <Sidebar />
-      
+          <Sidebar />     
       {user === "manager" && (
         <div>
-       {/* <AdminDashboard />  */}
         <div className="d-flex justify-content-center">
           <Select
             options={values.map((team) => ({

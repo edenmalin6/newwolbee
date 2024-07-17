@@ -1,25 +1,27 @@
 import { Table } from "antd";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 import { TiPin } from "react-icons/ti";
 import { useParams } from "react-router-dom";
 
 export const ProjectDetails = () => {
   const { employeeId } = useParams();
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState("");
   const [importanceLevels, setImportanceLevels] = useState({
-    management: 'High',
-    turnover: 'Medium',
-    workLifeBalance: 'Low',
-    managerialAttention: 'High',
-    professionalism: 'Low'
+    management: "High",
+    turnover: "Medium",
+    workLifeBalance: "Low",
+    managerialAttention: "High",
+    professionalism: "Low",
   });
   useEffect(() => {
-    const employeesArrJson = localStorage.getItem('employeesArr');
-    const currentManagerEmployeesArr = JSON.parse(employeesArrJson);
-    const employee = currentManagerEmployeesArr.find(emp => emp.id === (employeeId));
+    const employeesArr = localStorage.getItem("employeesArr");
+    const currentManagerEmployeesArr = JSON.parse(employeesArr) || [];
+    const employee = currentManagerEmployeesArr.find(
+      (emp) => emp._id === employeeId
+    );
     setSelectedEmployee(employee);
   }, [employeeId]);
 
@@ -28,31 +30,30 @@ export const ProjectDetails = () => {
   }
 
   const circleContainerStyle = {
-    width: '120px',
-    margin: '10px',
-    position: 'relative',
-    transition: 'transform 0.3s ease',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    borderRadius: '50%',
-    overflow: 'hidden',
+    width: "120px",
+    margin: "10px",
+    position: "relative",
+    transition: "transform 0.3s ease",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    borderRadius: "50%",
+    overflow: "hidden",
   };
 
   const circleTextStyle = {
-    fontSize: '12px',
-    color: '#333',
-    textAlign: 'center',
-    fontWeight: 'bold',
-    height:'20px',
-    marginTop:'30px'
-    
+    fontSize: "12px",
+    color: "#333",
+    textAlign: "center",
+    fontWeight: "bold",
+    height: "20px",
+    marginTop: "30px",
   };
 
   const wrapperStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: '20px',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: "20px",
   };
 
   const experienceData = [
@@ -74,133 +75,144 @@ export const ProjectDetails = () => {
   ];
 
   const titleStyle = {
-    textAlign: 'center',
-    marginTop: '0',
+    textAlign: "center",
+    marginTop: "0",
   };
 
   const paragraphStyle = {
-    position: 'relative',
-    paddingLeft: '35px',
-    marginBottom: '10px',
-    fontSize: '16px',
+    position: "relative",
+    paddingLeft: "35px",
+    marginBottom: "10px",
+    fontSize: "16px",
   };
 
   const iconStyle = {
-    position: 'absolute',
-    left: '25px',
+    position: "absolute",
+    left: "25px",
     // top: '10px',
     // transform: 'translateY(-50%)',
-    color: '#FF902F',
+    color: "#FF902F",
   };
 
   const pinIconSize = 24;
 
   const getColor = (importance) => {
     switch (importance) {
-      case 'High':
-        return '#FF0000';
-      case 'Medium':
-        return '#FFA500';
-      case 'Low':
-        return '#008000';
+      case "High":
+        return "#FF0000";
+      case "Medium":
+        return "#FFA500";
+      case "Low":
+        return "#008000";
       default:
-        return '#000000';
+        return "#000000";
     }
   };
 
   const containerStyle = {
-    display: 'flex',
-    gap: '15px'
+    display: "flex",
+    gap: "15px",
   };
 
   const boxStyle = {
-    backgroundColor: '#DCDCDC' ,
-    width: '380px',
-    height: '400px',
-    padding: '20px',
-    marginBottom: '20px',
-    border: 'solid black 0.3px',
-    borderRadius:'10px'
+    backgroundColor: "#DCDCDC",
+    width: "380px",
+    height: "400px",
+    padding: "20px",
+    marginBottom: "20px",
+    border: "solid black 0.3px",
+    borderRadius: "10px",
   };
-
 
   return (
     <div className="tab-content">
       <div className="pro-overview tab-pane fade show active" id="emp_assets">
         <div style={containerStyle}>
           <div style={boxStyle}>
-            <h3 style={titleStyle}>Wolbee’s Top insights</h3>
-        <hr />
-           <div style={{marginLeft: '15px'}}>
-           {selectedEmployee.TopInsights.map((insight, index) => {
-                  let parsedInsight;
-                  try {
-                    parsedInsight = JSON.parse(insight);
-                  } catch (error) {
-                    console.error("Failed to parse TopInsights JSON:", error);
-                    parsedInsight = {}; // או כל ברירת מחדל
-                  }
-                  return Object.values(parsedInsight).map((info, i) => (
-                    <div key={`${index}-${i}`}>
-                     <br />
-                     <TiPin style={iconStyle} size={pinIconSize}></TiPin> {info}</div>
-                  ));
-                })}
-           </div>
-           
+            <h3 style={titleStyle}>Wolbee’s Top Insights</h3>
+            <hr />
+            <div style={{ marginLeft: "15px" }}>
+              {selectedEmployee.TopInsights && selectedEmployee.TopInsights.map((insight, index) => {
+                let parsedInsight;
+                try {
+                  parsedInsight = JSON.parse(insight);
+                  console.log(parsedInsight);
+                } catch (error) {
+                  console.error("Failed to parse TopInsights JSON:", error);
+                  parsedInsight = {}; // או כל ברירת מחדל
+                }
+                return Object.values(parsedInsight).map((info, i) => (
+                  <div key={`${index}-${i}`}>
+                    <br />
+                    <TiPin style={iconStyle} size={pinIconSize}></TiPin> {info}
+                  </div>
+                ));
+              })}
+            </div>
           </div>
           <div style={boxStyle}>
-            <h3 style={titleStyle}>Latest insights</h3>
-<hr />
-            <div style={{marginLeft: '15px'}}>
-           {selectedEmployee.LatestInfo.map((insight, index) => {
-                  let parsedInsigh;
-                  try {
-                    parsedInsigh = JSON.parse(insight);
-                  } catch (error) {
-                    console.error("Failed to parse TopInsights JSON:", error);
-                    parsedInsigh = {}; // או כל ברירת מחדל
-                  }
-                  return Object.values(parsedInsigh).map((info, i) => (
-                    <div key={`${index}-${i}`}>
-                     <br />
-                     <TiPin style={{ position: 'absolute', left: '415px' ,color: '#FF902F'}} size={pinIconSize}></TiPin> {info}</div>
-                  ));
-                })}
-           </div>
+            <h3 style={titleStyle}>Latest Insights</h3>
+            <hr />
+            <div style={{ marginLeft: "15px" }}>
+              {selectedEmployee.LatestInfo && selectedEmployee.LatestInfo.map((insight, index) => {
+                let parsedInsight;
+                try {
+                  parsedInsight = JSON.parse(insight);
+                } catch (error) {
+                  console.error("Failed to parse TopInsights JSON:", error);
+                  parsedInsight = {}; // או כל ברירת מחדל
+                }
+                return Object.values(parsedInsight).map((info, i) => (
+                  <div key={`${index}-${i}`}>
+                    <br />
+                    <TiPin
+                      style={{
+                        position: "absolute",
+                        left: "415px",
+                        color: "#FF902F",
+                      }}
+                      size={pinIconSize}
+                    ></TiPin>{" "}
+                    {info}
+                  </div>
+                ));
+              })}
+            </div>
 
-            <div style={{marginLeft: '15px'}}>
-        
-           </div>
+            <div style={{ marginLeft: "15px" }}></div>
           </div>
-    
-          <div className="col-md-6 d-flex" style={{ width: '450px' }}>
+
+          <div className="col-md-6 d-flex" style={{ width: "450px" }}>
             <div className="card profile-box flex-fill">
               <div className="card-body">
-              <h3 style={titleStyle}>Lastest Activity</h3>
-<hr />
+                <h3 style={titleStyle}>Latest Activity</h3>
+                <hr />
 
-    <div className="experience-box">
-    <div style={{marginLeft: '15px'}}>
-           {selectedEmployee.LastestActivity.map((insight, index) => {
-                  let parsedInsigh;
-                  try {
-                    parsedInsigh = JSON.parse(insight);
-                  } catch (error) {
-                    console.error("Failed to parse TopInsights JSON:", error);
-                    parsedInsigh = {}; // או כל ברירת מחדל
-                  }
-                  return Object.values(parsedInsigh).map((info, i) => (
-                    <div key={`${index}-${i}`} >
-                    <br ></br>
-                     <span className="arrow">▼</span>
-                      {info}</div>
-                  ));
-                })}
-           </div>
- </div>
+                <div className="experience-box">
+                  <div style={{ marginLeft: "15px" }}>
+                    {selectedEmployee.LatestInfo && selectedEmployee.LatestInfo.map((insight, index) => {
+                      let parsedInsight;
+                      try {
+                        parsedInsight = JSON.parse(insight);
+                      } catch (error) {
+                        console.error(
+                          "Failed to parse TopInsights JSON:",
+                          error
+                        );
+                        parsedInsight = {}; // או כל ברירת מחדל
+                      }
+                      return Object.values(parsedInsight).map((info, i) => (
+                        <div key={`${index}-${i}`}>
+                          <br></br>
+                          <span className="arrow">▼</span>
+                          {info}
+                        </div>
+                      ));
+                    })}
+                  </div>
+                </div>
 
- {/* <ul className="experience-list">
+                {/* <ul className="experience-list">
     {selectedEmployee.LastestActivity.map((item, index) => (
       <li key={index}>
         <div className="experience-user">
@@ -217,7 +229,6 @@ export const ProjectDetails = () => {
       </li>
     ))}
   </ul> */}
-
               </div>
             </div>
           </div>
@@ -229,13 +240,13 @@ export const ProjectDetails = () => {
               value={100}
               text={importanceLevels.management}
               styles={buildStyles({
-                textSize: '10px',
-                textColor: 'black',
+                textSize: "10px",
+                textColor: "black",
                 pathColor: getColor(importanceLevels.management),
-                trailColor: '#d6d6d6',
+                trailColor: "#d6d6d6",
                 pathTransitionDuration: 0.5,
                 trailTransitionDuration: 0.5,
-                pathTransition: 'stroke-dashoffset 0.5s ease 0s',
+                pathTransition: "stroke-dashoffset 0.5s ease 0s",
               })}
             />
           </div>
@@ -245,13 +256,13 @@ export const ProjectDetails = () => {
               value={100}
               text={importanceLevels.turnover}
               styles={buildStyles({
-                textSize: '10px',
-                textColor: 'black',
+                textSize: "10px",
+                textColor: "black",
                 pathColor: getColor(importanceLevels.turnover),
-                trailColor: '#d6d6d6',
+                trailColor: "#d6d6d6",
                 pathTransitionDuration: 0.5,
                 trailTransitionDuration: 0.5,
-                pathTransition: 'stroke-dashoffset 0.5s ease 0s',
+                pathTransition: "stroke-dashoffset 0.5s ease 0s",
               })}
             />
           </div>
@@ -261,13 +272,13 @@ export const ProjectDetails = () => {
               value={100}
               text={importanceLevels.workLifeBalance}
               styles={buildStyles({
-                textSize: '10px',
-                textColor: 'black',
+                textSize: "10px",
+                textColor: "black",
                 pathColor: getColor(importanceLevels.workLifeBalance),
-                trailColor: '#d6d6d6',
+                trailColor: "#d6d6d6",
                 pathTransitionDuration: 0.5,
                 trailTransitionDuration: 0.5,
-                pathTransition: 'stroke-dashoffset 0.5s ease 0s',
+                pathTransition: "stroke-dashoffset 0.5s ease 0s",
               })}
             />
           </div>
@@ -277,13 +288,13 @@ export const ProjectDetails = () => {
               value={100}
               text={importanceLevels.managerialAttention}
               styles={buildStyles({
-                textSize: '10px',
-                textColor: 'black',
+                textSize: "10px",
+                textColor: "black",
                 pathColor: getColor(importanceLevels.managerialAttention),
-                trailColor: '#d6d6d6',
+                trailColor: "#d6d6d6",
                 pathTransitionDuration: 0.5,
                 trailTransitionDuration: 0.5,
-                pathTransition: 'stroke-dashoffset 0.5s ease 0s',
+                pathTransition: "stroke-dashoffset 0.5s ease 0s",
               })}
             />
           </div>
@@ -293,13 +304,13 @@ export const ProjectDetails = () => {
               value={100}
               text={importanceLevels.professionalism}
               styles={buildStyles({
-                textSize: '10px',
-                textColor: 'black',
+                textSize: "10px",
+                textColor: "black",
                 pathColor: getColor(importanceLevels.professionalism),
-                trailColor: '#d6d6d6',
+                trailColor: "#d6d6d6",
                 pathTransitionDuration: 0.5,
                 trailTransitionDuration: 0.5,
-                pathTransition: 'stroke-dashoffset 0.5s ease 0s',
+                pathTransition: "stroke-dashoffset 0.5s ease 0s",
               })}
             />
           </div>
