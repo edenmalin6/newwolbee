@@ -1,67 +1,109 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import Select from "react-select";
 import AllEmployeeAddPopup from "../../../components/modelpopup/AllEmployeeAddPopup";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import DeleteModal from "../../../components/modelpopup/DeleteModal";
 import EmployeeListFilter from "../../../components/EmployeeListFilter";
-import lisa from '../../../imgs/avatar_1.JPG'
-import tom from '../../../imgs/avatar_2.JPG'
-import david from '../../../imgs/avatar_3.JPG'
-import nicole from '../../../imgs/avatar_4.JPG'
-import brad from '../../../imgs/avatar_5.JPG'
-import john from '../../../imgs/avatar_6.JPG'
-import mark from '../../../imgs/avatar_7.JPG'
-import josh from '../../../imgs/avatar_8.JPG'
-import justin from '../../../imgs/avatar_9.JPG'
-import selena from '../../../imgs/avatar_10.JPG'
-import emma from '../../../imgs/avatar_11.JPG'
-import sofia from '../../../imgs/avatar_12.JPG'
+import lisa from "../../../imgs/avatar_1.JPG";
+import tom from "../../../imgs/avatar_2.JPG";
+import david from "../../../imgs/avatar_3.JPG";
+import nicole from "../../../imgs/avatar_4.JPG";
+import brad from "../../../imgs/avatar_5.JPG";
+import john from "../../../imgs/avatar_6.JPG";
+import mark from "../../../imgs/avatar_7.JPG";
+import josh from "../../../imgs/avatar_8.JPG";
+import justin from "../../../imgs/avatar_9.JPG";
+import selena from "../../../imgs/avatar_10.JPG";
+import emma from "../../../imgs/avatar_11.JPG";
+import sofia from "../../../imgs/avatar_12.JPG";
 import PopUp from "./PopUp";
 const AllEmployee = () => {
   const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [favoriteEmployees, setFavoriteEmployees] = useState([]);
+  const [selectedTeam, setSelectedTeam] = useState("");
+  const [values, setValues] = useState([]);
 
-  const avatars = [lisa, tom, david, nicole,john , emma, brad, josh, justin, selena, mark, sofia]
-  const toggleFavorite = (event, employeeId) => {
-    event.preventDefault(); // מניעת התנהגות ברירת המחדל של הלינק
+  const avatars = [
+    lisa,
+    tom,
+    david,
+    nicole,
+    john,
+    emma,
+    brad,
+    josh,
+    justin,
+    selena,
+    mark,
+    sofia,
+  ];
+  const userRole = localStorage.getItem("userRole");
+  
+// get all employees from db
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/getEmployees"
+        );
+        const employeesWithAvatars = response.data.map((employee, index) => ({
+          ...employee,
+          avatar: avatars[index % avatars.length],
+        }));
+        setEmployees(employeesWithAvatars);
+      } catch (error) {
+        console.log("Error fetching employees :", error);
+      }
+    };
+    fetchEmployees();
+  }, []);
+// get all team names from db
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/teams");
+        setValues(response.data);
+      } catch (error) {
+        console.error("Error fetching team :", error);
+      }
+    };
+    fetchTeams();
+  }, []);
+//filter employees by team
+  useEffect(() => {
+    if (selectedTeam) {
+      const filteredTeam = employees.filter(
+        (employee) => employee.team === selectedTeam
+      );
+      setFilteredEmployees(filteredTeam);
+    } else {
+      setFilteredEmployees(employees);
+    }
+  }, [selectedTeam, employees]);
+  
+
+  const handleSelect = (option) => {
+    setSelectedTeam(option.value);
+  };
+  const toggleFavorite = (e, employeeId) => {
+    e.preventDefault(); 
     const updatedFavoriteEmployees = [...favoriteEmployees]; // העתקת רשימת העובדים המועדפים
-    
+
     if (updatedFavoriteEmployees.includes(employeeId)) {
-      updatedFavoriteEmployees.splice(updatedFavoriteEmployees.indexOf(employeeId), 1); // הסרת העובד מרשימת המועדפים
+      updatedFavoriteEmployees.splice(
+        updatedFavoriteEmployees.indexOf(employeeId),
+        1
+      ); // הסרת העובד מרשימת המועדפים
     } else {
       updatedFavoriteEmployees.push(employeeId); // הוספת העובד לרשימת המועדפים
     }
-  
+
     setFavoriteEmployees(updatedFavoriteEmployees); // עדכון רשימת העובדים המועדפים
   };
-  
-
- 
-  useEffect(() => {
-    const manager = localStorage.getItem('credencial');
-    const currentLoggedInManager = JSON.parse(manager);
-
-    fetch('https://newwolbee-1.onrender.com/findemployees', {
-      headers: {
-        'Accept': 'application/json', 
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify(currentLoggedInManager)
-    })
-      .then(res => res.json())
-      .then(data => {
-        // Adding local avatar paths to employees
-        const employeesWithAvatars = data.map((employee, index) => ({
-          ...employee,
-          avatar: `../imgs/avatar_${index + 1}.jpg`
-        }));
-        localStorage.setItem('employeesArr', JSON.stringify(employeesWithAvatars));
-        setEmployees(employeesWithAvatars);
-      })
-      .catch(err => console.log(err));
-  }, []);
-
   return (
     <div>
       <style>
@@ -83,34 +125,56 @@ const AllEmployee = () => {
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Breadcrumbs
-            maintitle='Employees Page'
-            
+            maintitle="Employees Page"
             modal="#add_employee"
-            name="Add Employee"/>
-          <EmployeeListFilter />
+            name="Add Employee"
+          />
+          {userRole !== "manager" && <EmployeeListFilter />}
+          
+          <div className="d-flex justify-content-center">
+        <Select
+          options={values.map((team) => ({
+            value: team,
+            label: team.name,
+          }))}
+          onChange={handleSelect}
+          placeholder="Select a team"
+          className="w-50 m-3"
+        />
+      </div>
 
           <div className="row">
-            {employees.map((employee,index) => (
+            {filteredEmployees.map((employee, index) => (
               <div
-                className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3"
                 key={employee.id}
+                className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3"
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
               >
                 <div className="profile-widget">
-                <div className="profile-img">
-                <Link 
-  to={`/profile/${employee.id}`} 
-  className="avatar" 
-  onClick={(event) => toggleFavorite(event, employee.id)}
->
-  <span 
-    className={`favorite-star ${favoriteEmployees.includes(employee.id) ? 'active' : ''}`}
-  >
-    &#9734;
-  </span>
-  <img src={avatars[index % avatars.length]} alt={`${employee.fullName} Avatar`} />
-</Link>
-
-</div>
+                  <div className="profile-img">
+                    <Link
+                      to={`/profile/${employee.id}`}
+                      className="avatar"
+                      onClick={(event) => toggleFavorite(event, employee.id)}
+                    >
+                      <span
+                        className={`favorite-star ${
+                          favoriteEmployees.includes(employee.id)
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        &#9734;
+                      </span>
+                      <img
+                        src={avatars[index % avatars.length]}
+                        alt={`${employee.fullName} Avatar`}
+                      />
+                    </Link>
+                  </div>
                   <div className="dropdown profile-action">
                     <Link
                       to="#"
@@ -140,7 +204,9 @@ const AllEmployee = () => {
                     </div>
                   </div>
                   <h4 className="user-name m-t-10 mb-0 text-ellipsis">
-                    <Link to={`/profile/${employee.id}`}>{employee.fullName}</Link>
+                    <Link to={`/profile/${employee.id}`}>
+                      {employee.fullName}
+                    </Link>
                   </h4>
                   <div className="small text-muted">{employee.role}</div>
                 </div>
@@ -150,7 +216,7 @@ const AllEmployee = () => {
         </div>
       </div>
 
-      <AllEmployeeAddPopup  />
+      <AllEmployeeAddPopup />
       <DeleteModal Name="מחק עובד" />
     </div>
   );

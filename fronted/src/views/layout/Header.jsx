@@ -13,7 +13,7 @@ import {
 } from "../../Routes/ImagePath";
 import { FaRegBell, FaRegComment } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
-import { useTranslation } from "../../../node_modules/react-i18next";
+import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import manager from "../../imgs/managerProfilePic.jpg";
 

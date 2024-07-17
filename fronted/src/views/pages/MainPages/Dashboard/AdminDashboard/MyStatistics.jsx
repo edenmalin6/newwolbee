@@ -30,6 +30,7 @@ import sofia from "../../../../../imgs/avatar_12.JPG";
 import Select from "react-select";
 import { AlignCenter } from "react-feather";
 import Header from "../../../../layout/Header";
+import Sidebar from "../../../../layout/Sidebar";
 import AdminDashboard from "./adminDashboard"; //?  should i include this one?
 
 export default function MyStatistics() {
@@ -40,7 +41,7 @@ export default function MyStatistics() {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/teams");
+        const response = await axios.get("http://localhost:5000/api/teams");
         setValues(response.data);
       } catch (error) {
         console.error("Error fetching team :", error);
@@ -425,11 +426,11 @@ export default function MyStatistics() {
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Header />
-        </div>
-      </div>
+          <Sidebar />
+      
       {user === "manager" && (
         <div>
-       <AdminDashboard /> 
+       {/* <AdminDashboard />  */}
         <div className="d-flex justify-content-center">
           <Select
             options={values.map((team) => ({
@@ -843,6 +844,8 @@ export default function MyStatistics() {
             </div>
           </div>
         </div>
+      </div>
+      </div>
       </div>
     </>
   );

@@ -4,7 +4,7 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import Scrollbars from "react-custom-scrollbars-2";
-import { useTranslation } from "../../../node_modules/react-i18next";
+import { useTranslation } from "react-i18next";
 // import { withRouter } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./sidebardata";

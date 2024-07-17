@@ -6,8 +6,8 @@ export const getTeams = async(req, res) =>{
          teams = await TeamModel.find({});
      
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ message: "An error occurred while fetching team names." });
+        console.error("Error getting teams:", error);
+        res.status(500).json({ message: "An error occurred while fetching teams data." });
     }
     res.status(200).json(teams);
 }

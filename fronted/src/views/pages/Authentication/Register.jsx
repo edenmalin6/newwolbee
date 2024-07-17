@@ -48,7 +48,7 @@ const Register = () => {
     try {
       // const response = await axios.post("https://newwolbee-1.onrender.com/register", data);
       const response = await axios.post(
-        "http://localhost:4000/api/register",
+        "http://localhost:5000/api/register",
         data
       );
       console.log(response.data); // אולי תרצה להציג הודעה למשתמש שההרשמה הצליחה

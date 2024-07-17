@@ -1,6 +1,7 @@
 import express from "express";
 import { registerUser, loginUser } from "../controllers/userAuth.js";
 import { getTeams } from "../controllers/teamsData.js";
+import { getEmployees } from "../controllers/employeesData.js";
 
 const router = express.Router();
 
@@ -12,5 +13,8 @@ router.post("/login", loginUser);
 // router.get('/logout',logout)
 //get Teams
 router.get("/teams",getTeams);
+//get all employees
+router.get("/getEmployees",getEmployees);
+
 
 export default router;
