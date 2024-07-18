@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 
 export const ProjectDetails = () => {
   const { employeeId } = useParams();
-  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [importanceLevels, setImportanceLevels] = useState({
     management: "High",
     turnover: "Medium",
@@ -132,16 +132,18 @@ export const ProjectDetails = () => {
             <h3 style={titleStyle}>Wolbee’s Top Insights</h3>
             <hr />
             <div style={{ marginLeft: "15px" }}>
-              {selectedEmployee.TopInsights && selectedEmployee.TopInsights.map((insight, index) => {
-                let parsedInsight;
-                try {
-                  parsedInsight = JSON.parse(insight);
-                  console.log(parsedInsight);
-                } catch (error) {
-                  console.error("Failed to parse TopInsights JSON:", error);
-                  parsedInsight = {}; // או כל ברירת מחדל
-                }
-                return Object.values(parsedInsight).map((info, i) => (
+              {selectedEmployee.TopInsights.map((insight, index) => {
+                // let parsedInsight;
+                // parsedInsight = JSON.parse(insight);
+                // console.log(parsedInsight);
+                // try {
+                //   // parsedInsight = JSON.parse(insight);
+                //   console.log(parsedInsight);
+                // } catch (error) {
+                //   console.error("Failed to parse TopInsights JSON:", error);
+                //   parsedInsight = {}; // או כל ברירת מחדל
+                // }
+                return Object.values(insight).map((info, i) => (
                   <div key={`${index}-${i}`}>
                     <br />
                     <TiPin style={iconStyle} size={pinIconSize}></TiPin> {info}
@@ -154,15 +156,15 @@ export const ProjectDetails = () => {
             <h3 style={titleStyle}>Latest Insights</h3>
             <hr />
             <div style={{ marginLeft: "15px" }}>
-              {selectedEmployee.LatestInfo && selectedEmployee.LatestInfo.map((insight, index) => {
-                let parsedInsight;
-                try {
-                  parsedInsight = JSON.parse(insight);
-                } catch (error) {
-                  console.error("Failed to parse TopInsights JSON:", error);
-                  parsedInsight = {}; // או כל ברירת מחדל
-                }
-                return Object.values(parsedInsight).map((info, i) => (
+              {selectedEmployee.LatestInfo.map((info, index) => {
+                // let parsedInfo;
+                // try {
+                //   parsedInfo = JSON.parse(info);
+                // } catch (error) {
+                //   console.error("Failed to parse LatestInfo JSON:", error);
+                //   parsedInfo = {}; // או כל ברירת מחדל
+                // }
+                return Object.values(info).map((info, i) => (
                   <div key={`${index}-${i}`}>
                     <br />
                     <TiPin
@@ -190,18 +192,18 @@ export const ProjectDetails = () => {
 
                 <div className="experience-box">
                   <div style={{ marginLeft: "15px" }}>
-                    {selectedEmployee.LatestInfo && selectedEmployee.LatestInfo.map((insight, index) => {
-                      let parsedInsight;
-                      try {
-                        parsedInsight = JSON.parse(insight);
-                      } catch (error) {
-                        console.error(
-                          "Failed to parse TopInsights JSON:",
-                          error
-                        );
-                        parsedInsight = {}; // או כל ברירת מחדל
-                      }
-                      return Object.values(parsedInsight).map((info, i) => (
+                    {selectedEmployee.LatestActivity.map((activity, index) => {
+                      // let parsedActivity;
+                      // try {
+                      //   parsedActivity = JSON.parse(activity);
+                      // } catch (error) {
+                      //   console.error(
+                      //     "Failed to parse parsedActivity JSON:",
+                      //     error
+                      //   );
+                      //   parsedActivity = {}; // או כל ברירת מחדל
+                      // }
+                      return Object.values(activity).map((info, i) => (
                         <div key={`${index}-${i}`}>
                           <br></br>
                           <span className="arrow">▼</span>

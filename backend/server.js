@@ -9,6 +9,7 @@ dotenv.config();
 import dbConnection from "./Connection/dbConnection.js";
 import router from "./routes/index.js";
 import EmployeeModel from "./models/EmployeesModel.js";
+import { log } from "console";
 
 const app = express();
 app.use(cors());
@@ -40,7 +41,8 @@ app.use(
 // const workbook = xlsx.readFile(filePath);
 // const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 // const data = xlsx.utils.sheet_to_json(worksheet);
-// data.splice(0, 1);
+// // data.splice(0, 1);
+// console.log(data)
 
 
 // FOR GOOD GOOD PRACTICE. since"" empty env is a red flag
