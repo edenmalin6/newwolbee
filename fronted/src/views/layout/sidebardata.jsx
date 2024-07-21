@@ -5,7 +5,6 @@
 //   }
 //   return {};
 // };
-
 export const SidebarData = [
   {
     tittle: 'Main menu',
@@ -73,7 +72,7 @@ export const SidebarData = [
     menuValue: "My Dashboard",
     hasSubRoute: false,
     showSubRoute: false,
-    route: "/myDashboard",
+    route: "/myDashboard" ,
     icon: "la la-user",
     // style: getMenuItemStyle('Team Dashboard'),
       },

@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 // import { withRouter } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./sidebardata";
+import { managerSideBarData } from "./HrSideBarData";
 import * as Icon from "react-feather";
 
 const Sidebar = () => {
@@ -15,8 +16,9 @@ const Sidebar = () => {
   // const pathname = location.pathname.split("/")[1];
   const pathname = location.pathname;
   // console.log("pageurl", pathname);
+  const userRole = localStorage.getItem("userRole");
 
-  const [sidebarData, setSidebarData] = useState(SidebarData);
+  const [sidebarData, setSidebarData] = useState([]);
   const [isSidebarExpanded, setSidebarExpanded] = useState(false);
   const [isMouseOverSidebar, setMouseOverSidebar] = useState(false);
   const [submenuDrop, setSubmenudrop] = useState(false);
@@ -27,6 +29,11 @@ const Sidebar = () => {
   const [isSideMenunew, setSideMenuNew] = useState("dashboard");
 
   useEffect(() => {
+    if (userRole === "manager") {
+      setSidebarData(managerSideBarData);
+    } else {
+      setSidebarData(SidebarData);
+    }
     if (
       isMouseOverSidebar &&
       document.body.classList.contains("mini-sidebar")
@@ -35,7 +42,7 @@ const Sidebar = () => {
       return;
     }
     document.body.classList.remove("expand-menu");
-  }, [isMouseOverSidebar]);
+  }, [userRole, isMouseOverSidebar]);
 
   const handleMouseEnter = () => {
     setMouseOverSidebar(true);
@@ -1749,6 +1756,7 @@ const Sidebar = () => {
             hideTracksWhenNotNeeded={true}
           >
             <ul className="sidebar-vertical" id="veritical-sidebar">
+              {userRole !== "manager"}
               {sidebarData.map((mainTittle, index) => {
                 return (
                   <>

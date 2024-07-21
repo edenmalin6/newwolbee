@@ -16,14 +16,15 @@ Brad Jones,0,1,UX/UI Designer,66914f4d4e9e6e8d3811a1cf,20/04/1990,Tel Aviv,In a 
   ""Info2"": ""His favorite restaurant is Minna Tomei"",
   ""Info3"": ""Loves to bake and cook""
 }"
-John Perkins,0,2,Chief Scientist,66914f4d4e9e6e8d3811a1cc,12/12/1985,Jerusalem,Divorce,4,12,12/1,"{
+John Perkins,0,2,Chief Scientist,66914f4d4e9e6e8d3811a1cc,12/12/1985,Jerusalem,Divorced,4,12,12/1,"
+[{
     ""date1"": ""10/01/2024"",
     ""Activity1"": ""Personal interview"",
     ""date2"": ""12/04/2024"",
     ""Activity2"": ""Assignment feedback"",
     ""date3"": ""09/01/2024"",
     ""Activity3"": ""Compensation""
-  }",Assignment feedback,12/28/2023,Personal interview,9/3/2023,Birthday gift,Driving a motorcycle for 20 years,"{""date"": ""1/8"", ""event"": ""Child's birthday""}",1/8,"{""singer"": ""Amir Dadon""},{""singer"": ""Queen""}",{singer: 'Queen'}," {""Drink"": ""Beer"", ""Food1"": ""Italian"", ""Food2"": ""Meet""}",Italian,Meet,"{""Restaurant1"": ""Moshbutz"", ""Restaurant2"": ""Hudson""}",Hudson ,"{""Hobby1"": ""Drinking beer"", ""Hobby2"": ""Playing the piano"", ""Hobby3"": ""Swimming""}",Playing the piano,Swimming,"{
+  }]",Assignment feedback,12/28/2023,Personal interview,9/3/2023,Birthday gift,Driving a motorcycle for 20 years,"{""date"": ""1/8"", ""event"": ""Child's birthday""}",1/8,"{""singer"": ""Amir Dadon""},{""singer"": ""Queen""}",{singer: 'Queen'}," {""Drink"": ""Beer"", ""Food1"": ""Italian"", ""Food2"": ""Meet""}",Italian,Meet,"{""Restaurant1"": ""Moshbutz"", ""Restaurant2"": ""Hudson""}",Hudson ,"{""Hobby1"": ""Drinking beer"", ""Hobby2"": ""Playing the piano"", ""Hobby3"": ""Swimming""}",Playing the piano,Swimming,"{
     ""Insight1"": ""Maintaining a work-life balance and investing in his relationship with his children is very important to him"",
     ""Insight2"": ""Motivated by challenges and responsibility"",
     ""Insight3"": ""Faces challenges working within a team""

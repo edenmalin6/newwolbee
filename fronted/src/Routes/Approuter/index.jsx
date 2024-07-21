@@ -57,8 +57,7 @@ import { SidebarData } from "../../views/layout/sidebardata";
 import PopUp from "../../views/pages/Employees/PopUp";
 import UserSettings from "../../views/pages/Authentication/UserSettings";
 import MyDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/MyDashboard";
-import MyStatistics from "../../views/pages/MainPages/Dashboard/AdminDashboard/MyStatistics";
-import EmployeesData from "../../views/pages/MainPages/Dashboard/AdminDashboard/EmployeesData";
+import HrDashboard from "../../views/pages/MainPages/Dashboard/HrDashboard";
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -83,8 +82,7 @@ const AppRouter = () => {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/myDashboard" element={<MyDashboard />} />
-            <Route path="/hrDashboard" element={<MyStatistics />} />
-            {/* <Route path="/hr-employeesData" element={<EmployeesData />} /> */}
+            <Route path="/hrDashboard" element={<HrDashboard />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/register" element={<Register />} />
             <Route path="/otp" element={<Otp />} />
@@ -94,7 +92,7 @@ const AppRouter = () => {
             <Route path="/under-maintenance" element={<UnderManitenance />} />
             <Route
               path="/sidebar"
-              element={<Sidebar></Sidebar>}
+              element={<Sidebar/>}
               data={SidebarData}
             />
             <Route path="/job-list" element={<JobList />} />

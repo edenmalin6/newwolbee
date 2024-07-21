@@ -21,20 +21,21 @@ const Profile = () => {
   const { employeeId } = useParams();
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-  const avatars = {
-    '1': brad,
-    '2': john,
-    '3': lisa,
-    '4': tom,
-    '5': david,
-    '6': nicole,
-    '7': sofia,
-    '8': emma,
-    '9': mark,
-    '10': josh,
-    '11': justin,
-    '12': selena
-  };
+  //no need for this because the avatars are already stored in the localStorage for each employee
+  // const avatars = {
+  //   '1': brad,
+  //   '2': john,
+  //   '3': lisa,
+  //   '4': tom,
+  //   '5': david,
+  //   '6': nicole,
+  //   '7': sofia,
+  //   '8': emma,
+  //   '9': mark,
+  //   '10': josh,
+  //   '11': justin,
+  //   '12': selena
+  // };
 
   useEffect(() => {
     const employeesArrJson = localStorage.getItem('employeesArr');
@@ -65,7 +66,7 @@ const Profile = () => {
                     <div className="profile-img-wrap">
                       <div className="profile-img">
                         <Link to="#">
-                        <img src={avatars[selectedEmployee.id]} alt="UserImage" />
+                        <img src={selectedEmployee.avatar} alt="UserImage" /> 
                         </Link>
                       </div>
                     </div>

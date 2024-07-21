@@ -18,6 +18,7 @@ import justin from "../../../imgs/avatar_9.JPG";
 import selena from "../../../imgs/avatar_10.JPG";
 import emma from "../../../imgs/avatar_11.JPG";
 import sofia from "../../../imgs/avatar_12.JPG";
+
 import PopUp from "./PopUp";
 const AllEmployee = () => {
   const [employees, setEmployees] = useState([]);
@@ -32,18 +33,17 @@ const AllEmployee = () => {
     david,
     nicole,
     john,
-    emma,
-    brad,
-    josh,
-    justin,
-    selena,
     mark,
+    brad,
+    selena,
+    justin,
+    josh,
     sofia,
+    emma,   
   ];
   const userRole = localStorage.getItem("userRole");
 
   // get all employees from db
-
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -65,6 +65,7 @@ const AllEmployee = () => {
       }
     };
     fetchEmployees();
+  
   }, []);
   // get all team names from db
   useEffect(() => {
@@ -150,7 +151,7 @@ const AllEmployee = () => {
           </div>}
          
           <div className="row">
-            {filteredEmployees.map((employee, index) => (
+            {filteredEmployees.map((employee) => (
               <div
                 key={employee._id}
                 className="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3"
@@ -177,10 +178,13 @@ const AllEmployee = () => {
                       >
                         &#9734;
                       </span>
-                      <img
-                        src={avatars[index % avatars.length]}
-                        alt={`${employee.fullName} Avatar`}
-                      />
+                      {employee.avatar ? (
+                        <img
+                        src={employee.avatar}
+                        alt={employee.fullName}
+                      /> ) : ( <p>No Avatar</p>)
+                      }
+                      
                     </Link>
                   </div>
                   <div className="dropdown profile-action">
