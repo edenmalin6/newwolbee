@@ -57,7 +57,7 @@ import { SidebarData } from "../../views/layout/sidebardata";
 import PopUp from "../../views/pages/Employees/PopUp";
 import UserSettings from "../../views/pages/Authentication/UserSettings";
 import MyDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/MyDashboard";
-import HrDashboard from "../../views/pages/MainPages/Dashboard/HrDashboard";
+import HrDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/HrDashboard";
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -90,11 +90,7 @@ const AppRouter = () => {
             <Route path="/error-500" element={<Error500 />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/under-maintenance" element={<UnderManitenance />} />
-            <Route
-              path="/sidebar"
-              element={<Sidebar/>}
-              data={SidebarData}
-            />
+            <Route path="/sidebar" element={<Sidebar />} data={SidebarData} />
             <Route path="/job-list" element={<JobList />} />
             <Route path="/job-view" element={<JobView />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

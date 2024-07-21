@@ -1,9 +1,7 @@
 import React from "react";
-import Header from "../../../layout/Header";
-import Sidebar from "../../../layout/Sidebar";
-import HrStatistics from "./AdminDashboard/HrStatistics";
-
-const userRole = localStorage.getItem("userRole")
+import Header from "../../../../layout/Header";
+import Sidebar from "../../../../layout/Sidebar";
+import HrStatistics from "./HrStatistics";
 
 export default function HrDashboard() {
   return (
