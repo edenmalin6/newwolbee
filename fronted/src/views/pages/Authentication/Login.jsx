@@ -19,7 +19,6 @@ const validationSchema = Yup.object().shape({
     .required("Password is required"),
 });
 
-
 const Login = () => {
   const [currentId, setCurrentId] = useState("");
   const [isUserExist, setIsUserExist] = useState(false); // המשתנה החדש
@@ -47,11 +46,11 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       // const response = await axios.post('https://newwolbee-1.onrender.com/login', {
-            const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post("http://localhost:5000/api/login", {
         email: data.email,
-         password: data.password
+        password: data.password,
       });
-  
+
       const result = await response.data;
 
       if (response.status === 200) {
@@ -59,17 +58,17 @@ const Login = () => {
         const Value = {
           email: data.email,
           password: data.password,
-          role: result.role
+          role: result.role,
         };
         dispatch(login(Value));
         localStorage.setItem("credencial", JSON.stringify(Value));
-        localStorage.setItem("userRole", (Value.role));
-        if (result.role === "manager"){
-          navigate("/hrDashboard")
-        }else{
-          navigate("/myDashboard"); 
-        } 
-     
+        localStorage.setItem("userRole", Value.role);
+        if (result.role === "manager") {
+          navigate("/hrDashboard");
+        } else {
+          navigate("/myDashboard");
+        }
+
         resetFunctionwithlogin();
       } else {
         setEmailError(true);
@@ -99,18 +98,26 @@ const Login = () => {
 
   return (
     <div>
-   <div className="account-page" style={{ background: 'linear-gradient(to right, white, #FFC502, #FFEA00)' }}>
-
+      <div
+        className="account-page"
+        style={{
+          background: "linear-gradient(to right, white, #FFC502, #FFEA00)",
+        }}
+      >
         <div className="main-wrapper">
           <div className="account-content">
             {/* <Link to="/job-list" className="btn btn-primary apply-btn"> */}
-              {/* Apply Job */}
+            {/* Apply Job */}
             {/* </Link> */}
             <div className="container">
               {/* Account Logo */}
               <div className="account-logo">
                 <Link to="#">
-                  <img src={Applogo} alt="Dreamguy's Technologies" style={{width:'200px'}} />
+                  <img
+                    src={Applogo}
+                    alt="Dreamguy's Technologies"
+                    style={{ width: "200px" }}
+                  />
                 </Link>
               </div>
               {/* /Account Logo */}
@@ -199,11 +206,11 @@ const Login = () => {
                       </div>
                     </form>
                     <div className="account-footer">
-                      <p>
+                    <p>
                         Don't have an account yet?{" "}
                         <Link to="/register">Register</Link>
-                        </p>
-                    </div>
+                      </p>
+                      </div>                     
                   </div>
                   {/* /Account Form */}
                 </div>

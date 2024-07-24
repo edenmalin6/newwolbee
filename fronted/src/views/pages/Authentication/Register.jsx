@@ -9,6 +9,8 @@ import * as yup from "yup";
 import { Applogo } from "../../../Routes/ImagePath";
 import { emailrgx } from "./RegEx";
 // import { Applogo } from "../../../Routes/ImagePath";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../../Firebase/firebaseConfig";
 
 const schema = yup.object({
   email: yup
@@ -61,7 +63,13 @@ const Register = () => {
       setCheckUser(false);
     }
   };
+  // const handleGoogle = async(e) => {
+  //   // e.preventDefault()
+  //   const provider = new GoogleAuthProvider();
+  //   return signInWithPopup(auth, provider)
 
+
+  // }
   return (
     <div
       className="account-page"
@@ -232,6 +240,28 @@ const Register = () => {
                   </form>
 
                   <div className="account-footer">
+                    <div className="d-flex align-items-center justify-content-center my-4">
+                      <div className="flex-grow-1 border-top"></div>
+                      <div className="mx-2 text-muted">or</div>
+                      <div className="flex-grow-1 border-top"></div>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <button
+                        // onClick={handleGoogle}
+                          className="btn btn-lg btn-google btn-block btn-outline"
+                          href="#"
+                        >
+                          <img
+                            src="https://img.icons8.com/color/16/000000/google-logo.png"
+                            alt="Google logo"
+                            style={{ width: "26px", height: "26px" }}
+                          />{" "}
+                          Signup with Google
+                        </button>
+                      </div>
+                    </div>
+                    <br />
                     <p>
                       Already have an account? <Link to="/">Login</Link>
                     </p>
