@@ -1,100 +1,76 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
-import { Controller, useForm } from "react-hook-form";
-import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
-import { useDispatch } from "react-redux";
-import { login } from "../../../user";
 import { resetFunctionwithlogin } from "../../../components/ResetFunction";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../../../firebase/firebaseConfig";
+import { FirebaseError } from "firebase/app";
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
+const schema = yup.object().shape({
+  email: yup
+    .string()
     .email("Please enter a valid email address")
     .required("Email is required"),
-  password: Yup.string()
+  password: yup
+    .string()
     .min(6, "Password must be at least 6 characters")
     .max(20, "Password must be at most 20 characters")
     .required("Password is required"),
 });
 
 const Login = () => {
-  const [currentId, setCurrentId] = useState("");
-  const [isUserExist, setIsUserExist] = useState(false); // המשתנה החדש
-
-  const details = localStorage.getItem("loginDetails");
-  const loginData = JSON.parse(details);
+  const [isUserExist, setIsUserExist] = useState(false);
+  const [passwordEye, setPasswordEye] = useState(true);
+  const [checkUser, setCheckUser] = useState("");
+  const [networkError, setNetworkError] = useState("");
 
   const {
-    register,
-    control,
-    setValue,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    register,
   } = useForm({
-    resolver: yupResolver(validationSchema),
+    resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [emailError, setEmailError] = useState(false);
-
-  function refreshPage() {
-    window.location.reload(false);
-  }
 
   const onSubmit = async (data) => {
     try {
-      // const response = await axios.post('https://newwolbee-1.onrender.com/login', {
-      const response = await axios.post("http://localhost:5000/api/login", {
-        email: data.email,
-        password: data.password,
-      });
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      const user = userCredential.user;
+      const tokenData = await user.getIdTokenResult();
 
-      const result = await response.data;
-
-      if (response.status === 200) {
-        setIsUserExist(true);
-        const Value = {
-          email: data.email,
-          password: data.password,
-          role: result.role,
-        };
-        dispatch(login(Value));
-        localStorage.setItem("credencial", JSON.stringify(Value));
-        localStorage.setItem("userRole", Value.role);
-        if (result.role === "manager") {
-          navigate("/hrDashboard");
-        } else {
-          navigate("/myDashboard");
-        }
-
-        resetFunctionwithlogin();
+      console.log(await auth.currentUser.getIdTokenResult());
+      if (tokenData.claims.role === "manager") {
+        navigate("/hrDashboard");
       } else {
-        setEmailError(true);
-        navigate("/");
+        navigate("/myDashboard");
       }
     } catch (error) {
-      console.error("Error:", error);
+      if (error instanceof FirebaseError) {
+        if (error.code === "auth/invalid-credential") {
+          setCheckUser("Email or passwords are incorrect");
+        } else {
+          setNetworkError("An error occurred with Firebase: " + error.message);
+        }
+      } else {
+        console.error("Error signing up or adding document: ", error);
+      }
     }
   };
 
-  // useEffect(() => {
-  //   checkCurrentId();
-  //   setValue("email", localStorage.getItem("email"));
-  //   setValue("password", localStorage.getItem("password"));
-  // }, []);
-
-  const checkCurrentId = () => {
-    const storedId = localStorage.getItem("currentId");
-    setCurrentId(storedId);
-  };
-
-  const [eye, seteye] = useState(true);
-
-  const onEyeClick = () => {
-    seteye(!eye);
-  };
+  resetFunctionwithlogin();
 
   return (
     <div>
@@ -129,22 +105,21 @@ const Login = () => {
                   <div>
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="input-block mb-4">
-                        <label className="col-form-label">Email Address</label>
-                        <Controller
-                          name="email"
-                          control={control}
-                          render={({ field }) => (
-                            <input
-                              className={`form-control ${
-                                errors?.email ? "error-input" : ""
-                              }`}
-                              type="email"
-                              defaultValue={localStorage.getItem("email")}
-                              onChange={field.onChange}
-                              value={field.value}
-                              autoComplete="true"
-                            />
+                        <div className="input-block mb-4">
+                          {checkUser && (
+                            <span className="text-danger">{checkUser}</span>
                           )}
+                        </div>
+                        <label className="col-form-label">Email Address</label>
+                        <input
+                          id="email"
+                          name="email" // Not strictly necessary, but good practice
+                          type="email"
+                          {...register("email")}
+                          placeholder="Enter your email..."
+                          className={`form-control ${
+                            errors?.email ? "error-input" : ""
+                          }`}
                         />
 
                         <span className="text-danger">
@@ -164,20 +139,15 @@ const Login = () => {
                           </div>
                         </div>
                         <div style={{ position: "relative" }}>
-                          <Controller
-                            name="password"
-                            control={control}
-                            render={({ field }) => (
-                              <input
-                                className={`form-control ${
-                                  errors?.password ? "error-input" : ""
-                                }`}
-                                type={eye ? "password" : "text"}
-                                defaultValue={localStorage.getItem("password")}
-                                value={field.value}
-                                onChange={field.onChange}
-                              />
-                            )}
+                          <input
+                            type={passwordEye ? "password" : "text"}
+                            id="password"
+                            {...register("password")}
+                            placeholder="Enter your password..."
+                            className={`form-control ${
+                              errors?.password ? "error-input" : ""
+                            }`}
+                            // autoComplete="off"
                           />
                           <span
                             style={{
@@ -185,9 +155,9 @@ const Login = () => {
                               right: "5%",
                               top: "30%",
                             }}
-                            onClick={onEyeClick}
+                            onClick={() => setPasswordEye(!passwordEye)}
                             className={`fa-solid ${
-                              eye ? "fa-eye-slash" : "fa-eye"
+                              passwordEye ? "fa-eye-slash" : "fa-eye"
                             } `}
                           />
                         </div>
@@ -198,19 +168,42 @@ const Login = () => {
                       </div>
                       <div className="input-block text-center">
                         <button
-                          className="btn btn-primary account-btn"
+                          disabled={isSubmitting}
                           type="submit"
+                          className="btn btn-primary account-btn"
                         >
-                          Login
+                          {isSubmitting ? "Loading..." : "Login"}
                         </button>
                       </div>
                     </form>
                     <div className="account-footer">
-                    <p>
+                      <div className="d-flex align-items-center justify-content-center my-4">
+                        <div className="flex-grow-1 border-top"></div>
+                        <div className="mx-2 text-muted">or</div>
+                        <div className="flex-grow-1 border-top"></div>
+                      </div>
+                      <div className="col s12 m6 offset-m3 center-align">
+                        <div className="col-md-12">
+                          <button
+                            // onClick={handleGoogle}
+                            className="btn btn-lg btn-google btn-block btn-outline"
+                            href="#"
+                          >
+                            <img
+                              src="https://img.icons8.com/color/16/000000/google-logo.png"
+                              alt="Google logo"
+                              style={{ width: "26px", height: "26px" }}
+                            />{" "}
+                            Sign up with Google
+                          </button>
+                        </div>
+                      </div>
+                      <br />
+                      <p>
                         Don't have an account yet?{" "}
                         <Link to="/register">Register</Link>
                       </p>
-                      </div>                     
+                    </div>
                   </div>
                   {/* /Account Form */}
                 </div>

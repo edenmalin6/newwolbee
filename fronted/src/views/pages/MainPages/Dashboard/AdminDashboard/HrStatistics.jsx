@@ -29,12 +29,12 @@ import emma from "../../../../../imgs/avatar_11.JPG";
 import sofia from "../../../../../imgs/avatar_12.JPG";
 import Select from "react-select";
 import { AlignCenter } from "react-feather";
+import { auth } from "../../../../../firebase/firebaseConfig";
 
-
+// console.log(auth.currentUser.getIdTokenResult());
 export default function HrStatistics() {
   const [selectedTeam, setSelectedTeam] = useState("");
   const [values, setValues] = useState([]);
-  const [user, setUser] = useState("");
 
   useEffect(() => {
     const fetchTeams = async () => {
@@ -47,8 +47,6 @@ export default function HrStatistics() {
     };
     fetchTeams();
 
-    const role = localStorage.getItem("userRole");
-    setUser(role);
   }, []);
 
   const handleSelect = (option) => {
@@ -422,20 +420,19 @@ export default function HrStatistics() {
   return (
     <>
       <div className="page-wrapper">
-        <div className="content container-fluid">
-        </div>
-        </div>
-        <div className="d-flex justify-content-center">
-          <Select
-            options={values.map((team) => ({
-              value: team,
-              label: team.name,
-            }))}
-            onChange={handleSelect}
-            placeholder="Select a team"
-            className="w-50 m-3"
-          />
-        </div>
+        <div className="content container-fluid"></div>
+      </div>
+      <div className="d-flex justify-content-center">
+        <Select
+          options={values.map((team) => ({
+            value: team,
+            label: team.name,
+          }))}
+          onChange={handleSelect}
+          placeholder="Select a team"
+          className="w-50 m-3"
+        />
+      </div>
       <div className="row">
         <div className="col-sm-12  col-md-6 col-lg-3  ">
           <div
@@ -834,7 +831,6 @@ export default function HrStatistics() {
             </div>
           </div>
         </div>
-       
       </div>
     </>
   );

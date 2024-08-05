@@ -5,6 +5,7 @@ import store from "../../store";
 import { Provider } from "react-redux";
 import Login from "../../views/pages/Authentication/Login";
 import Register from "../../views/pages/Authentication/Register";
+import FillUserInfo from "../../views/pages/Authentication/FillUserInfo";
 import Otp from "../../views/pages/Authentication/Otp";
 import Error404 from "../../views/pages/Error/Error404";
 import Error500 from "../../views/pages/Error/Error500";
@@ -85,6 +86,7 @@ const AppRouter = () => {
             <Route path="/hrDashboard" element={<HrDashboard />} />
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/fill-info" element={<FillUserInfo />} />
             <Route path="/otp" element={<Otp />} />
             <Route path="/error-404" element={<Error404 />} />
             <Route path="/error-500" element={<Error500 />} />

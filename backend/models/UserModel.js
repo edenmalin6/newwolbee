@@ -2,18 +2,13 @@ import mongoose from "mongoose";
 
 
 const userSchema = new mongoose.Schema({
-    email : {
-        type : String,
-        required : [true,"provide email"],
-        unique : true
-    },
-    password : {
-        type : String,
-        required : [true, "please provide password"]
-    },
-    id : {  //civilId maybe?
+    civilId : {  
         type : Number,
         required : [true, "please provide Id"]
+    },
+    uid:{
+        type : String,
+        required : [true, "please provide uid"]
     },
     role : {
         type : String,

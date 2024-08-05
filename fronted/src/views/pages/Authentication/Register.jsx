@@ -2,15 +2,17 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useForm, Controller } from "react-hook-form";
+import axios, { AxiosError } from "axios";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Applogo } from "../../../Routes/ImagePath";
 import { emailrgx } from "./RegEx";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebase/firebaseConfig";
+import { FirebaseError } from "firebase/app";
+
 // import { Applogo } from "../../../Routes/ImagePath";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../../../Firebase/firebaseConfig";
 
 const schema = yup.object({
   email: yup
@@ -26,50 +28,65 @@ const schema = yup.object({
     .trim(),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .oneOf([yup.ref("password"), null], "Passwords do not match")
     .required("Please confirm your password")
     .trim(),
-  id: yup.string().required("ID is required").trim(),
 });
 
-const Register = () => {
+const SignUp = () => {
   const [passwordEye, setPasswordEye] = useState(true);
-  const [checkUser, setCheckUser] = useState(false);
-  const [repeatPasswordEye, setRepeatPasswordEye] = useState(true);
+  const [confirmPasswordEye, setConfirmPasswordEye] = useState(true);
+  const [checkUser, setCheckUser] = useState("");
+  const [networkError, setNetworkError] = useState("");
   const {
-    control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
+    register,
   } = useForm({
     resolver: yupResolver(schema),
   });
   const navigate = useNavigate();
 
+  //When the form is submitted, the handleSubmit function is called.
+  // This function validates the inputs and,if they are valid,
+  // calls the onSubmit function.
   const onSubmit = async (data) => {
-    console.log(data);
     try {
-      // const response = await axios.post("https://newwolbee-1.onrender.com/register", data);
-      const response = await axios.post(
-        "http://localhost:5000/api/register",
-        data
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
       );
-      console.log(response.data); // אולי תרצה להציג הודעה למשתמש שההרשמה הצליחה
-      setCheckUser(true);
-      const managerId = data.id;
-      localStorage.setItem("managerId", managerId);
-      navigate("/");
+      const user = userCredential.user; //is the result returned by this function
+      //navigate to fill-info on order to force refresh the firebase token.
+      navigate("/fill-info");
     } catch (error) {
-      console.error("Error registering user:", error.response.data);
-      setCheckUser(false);
+      if (error instanceof FirebaseError) {
+        // console.log(error);
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setCheckUser(
+              "This email is already in use. Please use a different email."
+            );
+            break;
+          case "auth/network-request-failed":
+            setNetworkError(
+              "Network error. Please check your internet connection and try again."
+            );
+            break;
+          default:
+            setCheckUser("An error occurred with Firebase: " + error.message);
+            break;
+        }
+      } else {
+        console.error("Error signing up or adding document: ", error);
+        setNetworkError(
+          "An unexpected error occurred. Please try again later."
+        );
+      }
     }
   };
-  // const handleGoogle = async(e) => {
-  //   // e.preventDefault()
-  //   const provider = new GoogleAuthProvider();
-  //   return signInWithPopup(auth, provider)
 
-
-  // }
   return (
     <div
       className="account-page"
@@ -93,68 +110,62 @@ const Register = () => {
                 <p className="account-subtitle">Access to our dashboard</p>
                 {/* Account Form */}
                 <div>
-                  <form>
+                  <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="input-block mb-3">
-                      <label className="col-form-label">Email</label>
-                      <Controller
-                        name="email"
-                        control={control}
-                        render={({ field: { value, onChange } }) => (
-                          <input
-                            className={`form-control ${
-                              errors?.email ? "error-input" : ""
-                            }`}
-                            type="text"
-                            value={value}
-                            onChange={onChange}
-                            autoComplete="false"
-                          />
-                        )}
+                      {networkError && (
+                        <span className="text-danger">
+                          {/* network error */}
+                          {networkError}
+                        </span>
+                      )}
+                      <label className="col-form-label">Email Address</label>
+                      <input
+                        id="email"
+                        name="email" // Not strictly necessary, but good practice
+                        type="email"
+                        {...register("email")}
+                        className={`form-control ${
+                          errors?.email ? "error-input" : ""
+                        }`}
                       />
-
                       <span className="text-danger">
                         {errors?.email?.message}
                       </span>
-                      <span className="text-danger">
-                        {checkUser ? "This Email is Already exist" : ""}
-                      </span>
+                      {checkUser && (
+                        <span className="text-danger">
+                          {/* check if email already exists in firebase & mongo */}
+                          {checkUser}
+                        </span>
+                      )}
                     </div>
 
                     <div className="input-block mb-3">
                       <label className="col-form-label">Password</label>
-                      <Controller
-                        name="password"
-                        control={control}
-                        render={({ field: { value, onChange } }) => (
-                          <div
-                            className="pass-group"
-                            style={{ position: "relative" }}
-                          >
-                            <input
-                              type={passwordEye ? "password" : "text"}
-                              className={`form-control  ${
-                                errors?.password ? "error-input" : ""
-                              }`}
-                              value={value}
-                              onChange={onChange}
-                              autoComplete="false"
-                            />
-                            <span
-                              style={{
-                                position: "absolute",
-                                right: "5%",
-                                top: "30%",
-                              }}
-                              onClick={() => setPasswordEye(!passwordEye)}
-                              className={`fa toggle-password ${
-                                passwordEye ? "fa-eye-slash" : "fa-eye"
-                              }`}
-                            />
-                          </div>
-                        )}
-                        defaultValue=""
-                      />
-
+                      <div
+                        className="pass-group"
+                        style={{ position: "relative" }}
+                      >
+                        <input
+                          type={passwordEye ? "password" : "text"}
+                          id="password"
+                          {...register("password")}
+                          className={`form-control ${
+                            errors?.password ? "error-input" : ""
+                          }`}
+                          autoComplete="off"
+                        />
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "5%",
+                            top: "30%",
+                          }}
+                          onClick={() => setPasswordEye(!passwordEye)}
+                          className={`fa toggle-password ${
+                            passwordEye ? "fa-eye-slash" : "fa-eye"
+                          }`}
+                        />
+                      </div>
                       <span className="text-danger">
                         {errors?.password?.message}
                       </span>
@@ -162,66 +173,36 @@ const Register = () => {
 
                     <div className="input-block mb-3">
                       <label className="col-form-label">Confirm Password</label>
-                      <Controller
-                        name="confirmPassword"
-                        control={control}
-                        render={({ field: { value, onChange } }) => (
-                          <div
-                            className="pass-group"
-                            style={{ position: "relative" }}
-                          >
-                            <input
-                              type={repeatPasswordEye ? "password" : "text"}
-                              className={`form-control  ${
-                                errors?.repeatPassword ? "error-input" : ""
-                              }`}
-                              value={value}
-                              onChange={onChange}
-                              autoComplete="false"
-                            />
-                            <span
-                              style={{
-                                position: "absolute",
-                                right: "5%",
-                                top: "30%",
-                              }}
-                              onClick={() =>
-                                setRepeatPasswordEye(!repeatPasswordEye)
-                              }
-                              className={`fa toggle-password ${
-                                repeatPasswordEye ? "fa-eye-slash" : "fa-eye"
-                              }`}
-                            />
-                          </div>
-                        )}
-                        defaultValue=""
-                      />
-
+                      <div
+                        className="pass-group"
+                        style={{ position: "relative" }}
+                      >
+                        <input
+                          type={confirmPasswordEye ? "password" : "text"}
+                          {...register("confirmPassword")}
+                          className={`form-control ${
+                            errors?.confirmPassword ? "error-input" : ""
+                          }`}
+                          autoComplete="off"
+                        />
+                        <span
+                          style={{
+                            position: "absolute",
+                            right: "5%",
+                            top: "30%",
+                          }}
+                          onClick={() =>
+                            setConfirmPasswordEye(!confirmPasswordEye)
+                          }
+                          className={`fa toggle-password ${
+                            confirmPasswordEye ? "fa-eye-slash" : "fa-eye"
+                          }`}
+                        />
+                      </div>
                       <span className="text-danger">
-                        {errors?.repeatPassword?.message}
+                        {errors?.confirmPassword?.message}
                       </span>
                     </div>
-
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">ID</label>
-                      <Controller
-                        name="id"
-                        control={control}
-                        render={({ field: { value, onChange } }) => (
-                          <input
-                            className={`form-control ${
-                              errors?.id ? "error-input" : ""
-                            }`}
-                            type="number"
-                            value={value}
-                            onChange={onChange}
-                            autoComplete="false"
-                          />
-                        )}
-                      />
-                      <span className="text-danger">{errors?.id?.message}</span>
-                    </div>
-
                     <div
                       className="input-block text-center"
                       style={{
@@ -229,38 +210,17 @@ const Register = () => {
                           "linear-gradient(to right, white, #FFC502, #FFEA00)",
                       }}
                     >
-                      <Link
-                        to="#"
+                      <button
+                        disabled={isSubmitting}
+                        type="submit"
                         className="btn btn-primary account-btn"
-                        onClick={handleSubmit(onSubmit)}
                       >
-                        Register
-                      </Link>
+                        {isSubmitting ? "Loading..." : "Register"}
+                      </button>
                     </div>
                   </form>
 
                   <div className="account-footer">
-                    <div className="d-flex align-items-center justify-content-center my-4">
-                      <div className="flex-grow-1 border-top"></div>
-                      <div className="mx-2 text-muted">or</div>
-                      <div className="flex-grow-1 border-top"></div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-12">
-                        <button
-                        // onClick={handleGoogle}
-                          className="btn btn-lg btn-google btn-block btn-outline"
-                          href="#"
-                        >
-                          <img
-                            src="https://img.icons8.com/color/16/000000/google-logo.png"
-                            alt="Google logo"
-                            style={{ width: "26px", height: "26px" }}
-                          />{" "}
-                          Signup with Google
-                        </button>
-                      </div>
-                    </div>
                     <br />
                     <p>
                       Already have an account? <Link to="/">Login</Link>
@@ -277,4 +237,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default SignUp;

@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./sidebardata";
 import { managerSideBarData } from "./HrSideBarData";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import * as Icon from "react-feather";
 
 const Sidebar = () => {
@@ -16,9 +17,9 @@ const Sidebar = () => {
   // const pathname = location.pathname.split("/")[1];
   const pathname = location.pathname;
   // console.log("pageurl", pathname);
-  const userRole = localStorage.getItem("userRole");
 
   const [sidebarData, setSidebarData] = useState([]);
+
   const [isSidebarExpanded, setSidebarExpanded] = useState(false);
   const [isMouseOverSidebar, setMouseOverSidebar] = useState(false);
   const [submenuDrop, setSubmenudrop] = useState(false);
@@ -27,13 +28,31 @@ const Sidebar = () => {
   const [level2Menu, setLevel2Menu] = useState("");
   const [level3Menu, setLevel3Menu] = useState("");
   const [isSideMenunew, setSideMenuNew] = useState("dashboard");
+  const [user, setUser] = useState("");
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => { //setting an observer on the Auth object
+    setUser(user);
+  });
 
   useEffect(() => {
-    if (userRole === "manager") {
-      setSidebarData(managerSideBarData);
-    } else {
-      setSidebarData(SidebarData);
-    }
+    const getUserRole = async () => {
+      try {
+        const token = await user.getIdTokenResult();
+        if (token.claims.role === "manager") {
+          setSidebarData(managerSideBarData);
+        } else {
+          setSidebarData(SidebarData);
+        }
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+      }
+    };
+
+    getUserRole();
+  }, [user]);
+
+  useEffect(() => {
     if (
       isMouseOverSidebar &&
       document.body.classList.contains("mini-sidebar")
@@ -42,7 +61,7 @@ const Sidebar = () => {
       return;
     }
     document.body.classList.remove("expand-menu");
-  }, [userRole, isMouseOverSidebar]);
+  }, [isMouseOverSidebar]);
 
   const handleMouseEnter = () => {
     setMouseOverSidebar(true);
@@ -1756,7 +1775,7 @@ const Sidebar = () => {
             hideTracksWhenNotNeeded={true}
           >
             <ul className="sidebar-vertical" id="veritical-sidebar">
-              {userRole !== "manager"}
+              {/* {userRole !== "manager"} */}
               {sidebarData.map((mainTittle, index) => {
                 return (
                   <>
