@@ -12,7 +12,7 @@ import {
   small_hover,
 } from "../Routes/ImagePath";
 import { Link } from "react-router-dom";
-import { setLayout } from "../user";
+import { setLayout } from "../features/userSlice";
 import { useDispatch } from "react-redux";
 
 const OffCanvas = () => {
@@ -126,7 +126,7 @@ const OffCanvas = () => {
     setSizes();
     setlayoutStyling(getlayoutStyle);
     setLayoutSidebarStyling();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const changes = () => {

@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import { resetFunctionwithlogin } from "../../../components/ResetFunction";
-import axios, { AxiosError } from "axios";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -27,7 +26,6 @@ const schema = yup.object().shape({
 });
 
 const Login = () => {
-  const [isUserExist, setIsUserExist] = useState(false);
   const [passwordEye, setPasswordEye] = useState(true);
   const [checkUser, setCheckUser] = useState("");
   const [networkError, setNetworkError] = useState("");
@@ -212,9 +210,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-      {/* הדפסת הסטטוס של המשתמש - האם קיים או לא */}
-      {isUserExist && <p>User exists in database</p>}
-      {!isUserExist && <p>User does not exist in database</p>}
     </div>
   );
 };

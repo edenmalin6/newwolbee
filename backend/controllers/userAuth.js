@@ -5,6 +5,7 @@ import { getAuth } from "firebase-admin/auth";
 export const fillUserInfo = async (req, res) => {
  const { civilId } = req.body
  const {uid} = req
+// const user = req['currentUser'];
  let payload;
   try {
   //add user's role with user claims
@@ -26,6 +27,7 @@ export const fillUserInfo = async (req, res) => {
 //"login"
 export const verifyAuthentication = async (req, res) => {
   const {uid} = req
+  // const user = req['currentUser'];
   try {
     return res.status(200).json(uid);
   } catch (error) {

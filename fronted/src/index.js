@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Approuter from "./Routes/Approuter";
-
+import { store } from './app/store'
+import { Provider } from 'react-redux'
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import "@fortawesome/fontawesome-free/css/fontawesome.min.css";
@@ -13,6 +14,8 @@ import "./assets/css/material.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
+  <Provider store={store}>
     <Approuter />
+    </Provider>
   </>
 );

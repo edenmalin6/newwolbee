@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import AppContainer from "../Appcontainer";
-import store from "../../store";
-import { Provider } from "react-redux";
 import Login from "../../views/pages/Authentication/Login";
 import Register from "../../views/pages/Authentication/Register";
 import FillUserInfo from "../../views/pages/Authentication/FillUserInfo";
@@ -59,6 +57,15 @@ import PopUp from "../../views/pages/Employees/PopUp";
 import UserSettings from "../../views/pages/Authentication/UserSettings";
 import MyDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/MyDashboard";
 import HrDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard/HrDashboard";
+import { useDispatch, useSelector } from "react-redux";
+import { auth } from "../../firebase/firebaseConfig";
+import {
+  login,
+  setLoading,
+  logout,
+  updateToken,
+} from "../../features/userSlice";
+import { getIdToken } from "firebase/auth";
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -70,79 +77,100 @@ const ScrollToTop = () => {
 };
 
 const AppRouter = () => {
+  const dispatch = useDispatch();
+  // const isLoading = useSelector((state) => state.user.isLoading);// add loading to tab
+
   useEffect(() => {
-    localStorage.setItem("email", "raye@gmail.com");
-    localStorage.setItem("password", "123456");
-  }, []);
+    const unsubscribe = auth.onIdTokenChanged(async (user) => {
+      if (user) {
+        const token = await user.getIdTokenResult();
+        const encodedToken = await user.getIdToken();
+        dispatch(
+          login({
+            uid: user.uid,
+            email: user.email,
+            role: token.claims.role,
+            updateToken: encodedToken,
+          })
+        );
+      } else {
+        dispatch(logout());
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      // unsubscribeToken();
+    }; // Cleanup subscription on unmount
+  }, [dispatch]);
+
   return (
     <div>
-      <Provider store={store}>
-        <BrowserRouter>
-          <ScrollToTop />
-          <PopUp />
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/myDashboard" element={<MyDashboard />} />
-            <Route path="/hrDashboard" element={<HrDashboard />} />
-            <Route path="/change-password" element={<ChangePassword />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/fill-info" element={<FillUserInfo />} />
-            <Route path="/otp" element={<Otp />} />
-            <Route path="/error-404" element={<Error404 />} />
-            <Route path="/error-500" element={<Error500 />} />
-            <Route path="/coming-soon" element={<ComingSoon />} />
-            <Route path="/under-maintenance" element={<UnderManitenance />} />
-            <Route path="/sidebar" element={<Sidebar />} data={SidebarData} />
-            <Route path="/job-list" element={<JobList />} />
-            <Route path="/job-view" element={<JobView />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/lock-screen" element={<LockScreen />} />
-            <Route path="/accordion" element={<Accordions />} />
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/breadcrumbs" element={<Breadcrumbs />} />
-            <Route path="/avatar" element={<Avatar />} />
-            <Route path="/badges" element={<Badges />} />
-            <Route path="/buttons" element={<ButtonCard />} />
-            <Route path="/buttongroup" element={<ButtonGroup />} />
-            <Route path="/cards" element={<Cards />} />
-            <Route path="/dropdowns" element={<Dropdowns />} />
-            <Route path="/grid" element={<Grid />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/media" element={<Media />} />
-            <Route path="/modal" element={<Modals />} />
-            <Route path="/offcanvas" element={<Offcanvas />} />
-            <Route path="/pagination" element={<Pagination />} />
-            <Route path="/popover" element={<Popover />} />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="/placeholders" element={<Placeholder />} />
-            <Route path="/rangeslider" element={<RangeSlider />} />
-            <Route path="/spinners" element={<Spinners />} />
-            <Route path="/sweetalert" element={<SweetAlert />} />
-            <Route path="/nav-tabs" element={<Tabs />} />
-            <Route path="/toastr" element={<Toats />} />
-            <Route path="/tooltips" element={<Tooltips />} />
-            <Route path="/typography" element={<Typography />} />
-            <Route path="/video" element={<Videos />} />
-            <Route path="/lightbox" element={<Lightbox />} />
-            <Route path="/carousel" element={<Carousel />} />
-            <Route path="/carousel" element={<Carousel />} />
-            <Route path="/borders" element={<Borders />} />
-            <Route path="/breadcrumb" element={<Breadcrumb />} />
-            <Route path="/colors" element={<Colors />} />
-            <Route path="/modals" element={<UiModals />} />
-            <Route path="/spinner" element={<Spinner />} />
-            <Route path="/*" element={<AppContainer />} />
-            <Route path="*" element={<Navigate to="/" />} />
-            <Route path="/settings" element={<UserSettings />} />
-            <Route
-              path="/foremployee"
-              element={<GiftForEmployee></GiftForEmployee>}
-            >
-              {" "}
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </Provider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <PopUp />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/myDashboard" element={<MyDashboard />} />
+          <Route path="/hrDashboard" element={<HrDashboard />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/fill-info" element={<FillUserInfo />} />
+          <Route path="/otp" element={<Otp />} />
+          <Route path="/error-404" element={<Error404 />} />
+          <Route path="/error-500" element={<Error500 />} />
+          <Route path="/coming-soon" element={<ComingSoon />} />
+          <Route path="/under-maintenance" element={<UnderManitenance />} />
+          <Route path="/sidebar" element={<Sidebar />} data={SidebarData} />
+          <Route path="/job-list" element={<JobList />} />
+          <Route path="/job-view" element={<JobView />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/lock-screen" element={<LockScreen />} />
+          <Route path="/accordion" element={<Accordions />} />
+          <Route path="/alerts" element={<Alerts />} />
+          <Route path="/breadcrumbs" element={<Breadcrumbs />} />
+          <Route path="/avatar" element={<Avatar />} />
+          <Route path="/badges" element={<Badges />} />
+          <Route path="/buttons" element={<ButtonCard />} />
+          <Route path="/buttongroup" element={<ButtonGroup />} />
+          <Route path="/cards" element={<Cards />} />
+          <Route path="/dropdowns" element={<Dropdowns />} />
+          <Route path="/grid" element={<Grid />} />
+          <Route path="/images" element={<Images />} />
+          <Route path="/media" element={<Media />} />
+          <Route path="/modal" element={<Modals />} />
+          <Route path="/offcanvas" element={<Offcanvas />} />
+          <Route path="/pagination" element={<Pagination />} />
+          <Route path="/popover" element={<Popover />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/placeholders" element={<Placeholder />} />
+          <Route path="/rangeslider" element={<RangeSlider />} />
+          <Route path="/spinners" element={<Spinners />} />
+          <Route path="/sweetalert" element={<SweetAlert />} />
+          <Route path="/nav-tabs" element={<Tabs />} />
+          <Route path="/toastr" element={<Toats />} />
+          <Route path="/tooltips" element={<Tooltips />} />
+          <Route path="/typography" element={<Typography />} />
+          <Route path="/video" element={<Videos />} />
+          <Route path="/lightbox" element={<Lightbox />} />
+          <Route path="/carousel" element={<Carousel />} />
+          <Route path="/carousel" element={<Carousel />} />
+          <Route path="/borders" element={<Borders />} />
+          <Route path="/breadcrumb" element={<Breadcrumb />} />
+          <Route path="/colors" element={<Colors />} />
+          <Route path="/modals" element={<UiModals />} />
+          <Route path="/spinner" element={<Spinner />} />
+          <Route path="/*" element={<AppContainer />} />
+          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/settings" element={<UserSettings />} />
+          <Route
+            path="/foremployee"
+            element={<GiftForEmployee></GiftForEmployee>}
+          >
+            {" "}
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 };

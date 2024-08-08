@@ -16,8 +16,21 @@ import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import manager from "../../imgs/managerProfilePic.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { auth } from "../../firebase/firebaseConfig";
+import { logout } from "../../features/userSlice";
+import { signOut } from "firebase/auth";
 
 const Header = (props) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate()
+
+  const handleLogout = (() => {
+    dispatch(logout())
+    signOut(auth)
+    navigate("/")
+
+  })
   const initialNotifications = notificationsData.notifications.map(
     (notification) => ({
       ...notification,
@@ -68,7 +81,6 @@ const Header = (props) => {
     );
   };
 
-  const navigate = useNavigate();
 
   const notificationNav = (key) => {
     const notification = notifications.find(
@@ -400,9 +412,9 @@ const Header = (props) => {
             <Link className="dropdown-item" to="/settings">
               Settings
             </Link>
-            <Link className="dropdown-item" to="/">
+            <button className="dropdown-item" onClick={handleLogout}>
               Logout
-            </Link>
+            </button>
           </div>
         </li>
       </ul>
@@ -422,9 +434,9 @@ const Header = (props) => {
           <Link className="dropdown-item" to="/settings">
             Settings
           </Link>
-          <Link className="dropdown-item" to="/">
+          <button className="dropdown-item" onClick={handleLogout}>
             Logout
-          </Link>
+          </button>
         </div>
       </div>
     </div>

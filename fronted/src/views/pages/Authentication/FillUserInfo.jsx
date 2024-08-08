@@ -25,7 +25,7 @@ const FillUserInfo = () => {
 
   const onSubmit = async (data) => {
     try {
-      const token = await auth.currentUser.getIdTokenResult();
+      const token = await auth.currentUser.getIdToken();
 
       const response = await axios.post(
         "http://localhost:5000/api/fill-info",
@@ -34,19 +34,20 @@ const FillUserInfo = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
       const refreshedToken = await auth.currentUser.getIdTokenResult(true);
       console.log(refreshedToken);
+      console.log(response.status);
       if (response.status === 201) {
         if (refreshedToken.claims.role === "manager") {
           navigate("/hrDashboard");
+        } else {
+          navigate("/myDashboard");
         }
-      } else {
-        navigate("/myDashboard");
-      }
+      } 
     } catch (error) {
       if (error instanceof FirebaseError) {
         if (error.code === "auth/network-request-failed") {

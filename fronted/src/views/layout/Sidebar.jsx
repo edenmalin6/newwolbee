@@ -11,6 +11,7 @@ import { SidebarData } from "./sidebardata";
 import { managerSideBarData } from "./HrSideBarData";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import * as Icon from "react-feather";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -28,28 +29,20 @@ const Sidebar = () => {
   const [level2Menu, setLevel2Menu] = useState("");
   const [level3Menu, setLevel3Menu] = useState("");
   const [isSideMenunew, setSideMenuNew] = useState("dashboard");
-  const [user, setUser] = useState("");
 
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => { //setting an observer on the Auth object
-    setUser(user);
-  });
+
+  const user = useSelector((state) => state.user.user);
+  
 
   useEffect(() => {
-    const getUserRole = async () => {
-      try {
-        const token = await user.getIdTokenResult();
-        if (token.claims.role === "manager") {
-          setSidebarData(managerSideBarData);
-        } else {
-          setSidebarData(SidebarData);
-        }
-      } catch (error) {
-        console.error("Error fetching user role:", error);
+    if (user && user.role) {
+      if (user.role === "manager") {
+        setSidebarData(managerSideBarData);
+      } else {
+        setSidebarData(SidebarData);
       }
-    };
-
-    getUserRole();
+     }
+        
   }, [user]);
 
   useEffect(() => {

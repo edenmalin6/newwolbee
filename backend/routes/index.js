@@ -17,16 +17,17 @@ const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ error: "Authorization key is missing" });
   }
   //   console.log(req.headers);
-  const token = authorization.startsWith("Bearer ")
+  const idToken = authorization.startsWith("Bearer ")
     ? authorization.slice(7)
     : null;
-  if (!token) {
+  if (!idToken) {
     return res.status(401).json({ error: "Bearer token is missing" });
   }
   try {
-    const decodedToken = await getAuth().verifyIdToken(token); //check if token is valid - authentication(where does the request come from?)
+    const decodedToken = await getAuth().verifyIdToken(idToken); //check if token is valid - authentication(where does the request come from?)
     req.uid = decodedToken.uid; //put uid from firebase in the req - identification(who's making the request)
     next();
+
   } catch (error) {
     console.error("Error verifying token:", error);
     let status = 401;
@@ -50,6 +51,7 @@ const authMiddleware = async (req, res, next) => {
 
     return res.status(status).json({ error: message });
   }
+
 };
 
 router.use(authMiddleware);

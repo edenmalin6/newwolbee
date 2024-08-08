@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Select from "react-select";
+import { useSelector } from "react-redux";
+import { auth } from "../../../firebase/firebaseConfig";
 import AllEmployeeAddPopup from "../../../components/modelpopup/AllEmployeeAddPopup";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import DeleteModal from "../../../components/modelpopup/DeleteModal";
@@ -26,6 +28,20 @@ const AllEmployee = () => {
   const [favoriteEmployees, setFavoriteEmployees] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState("");
   const [values, setValues] = useState([]);
+  const [userRole, setUserRole] = useState(null);
+
+  const user = useSelector((state) => state.user.user);
+
+  // need to add loading
+  useEffect(() => {
+    if (user && user.role) {
+      if (user.role === "manager") {
+        setUserRole("manager");
+      } else {
+        setUserRole("otherUser");
+      }
+    }
+  }, [user]);
 
   const avatars = [
     lisa,
@@ -39,16 +55,21 @@ const AllEmployee = () => {
     justin,
     josh,
     sofia,
-    emma,   
+    emma,
   ];
-  const userRole = localStorage.getItem("userRole");
 
   // get all employees from db
   useEffect(() => {
     const fetchEmployees = async () => {
+      if (!user) return;
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/getEmployees",{},{}
+          "http://localhost:5000/api/getEmployees",
+          {
+            headers: {
+              Authorization: `Bearer ${user.updateToken}`,
+            },
+          }
         );
         const employeesWithAvatars = response.data.map((employee, index) => ({
           ...employee,
@@ -65,20 +86,26 @@ const AllEmployee = () => {
       }
     };
     fetchEmployees();
-  
-  }, []);
+  }, [user]);
+
   // get all team names from db
   useEffect(() => {
     const fetchTeams = async () => {
+      if (!user) return;
       try {
-        const response = await axios.get("http://localhost:5000/api/teams");
+        const response = await axios.get("http://localhost:5000/api/teams", {
+          headers: {
+            Authorization: `Bearer ${user.updateToken}`,
+          },
+        });
         setValues(response.data);
       } catch (error) {
         console.error("Error fetching team :", error);
       }
     };
     fetchTeams();
-  }, []);
+  }, [user]);
+
   //filter employees by team
   useEffect(() => {
     if (selectedTeam) {
@@ -134,22 +161,21 @@ const AllEmployee = () => {
             modal="#add_employee"
             name="Add Employee"
           />
-          {userRole !== "manager" &&
+          {userRole === "otherUser" && <EmployeeListFilter />}
+          {userRole === "manager" && (
+            <div className="d-flex justify-content-center">
+              <Select
+                options={values.map((team) => ({
+                  value: team._id,
+                  label: team.name,
+                }))}
+                onChange={handleSelect}
+                placeholder="Select a team"
+                className="w-50 m-3"
+              />
+            </div>
+          )}
 
-           <EmployeeListFilter />}
-            {userRole === "manager" &&
-              <div className="d-flex justify-content-center">
-            <Select
-              options={values.map((team) => ({
-                value: team._id,
-                label: team.name,
-              }))}
-              onChange={handleSelect}
-              placeholder="Select a team"
-              className="w-50 m-3"
-            />
-          </div>}
-         
           <div className="row">
             {filteredEmployees.map((employee) => (
               <div
@@ -179,12 +205,10 @@ const AllEmployee = () => {
                         &#9734;
                       </span>
                       {employee.avatar ? (
-                        <img
-                        src={employee.avatar}
-                        alt={employee.fullName}
-                      /> ) : ( <p>No Avatar</p>)
-                      }
-                      
+                        <img src={employee.avatar} alt={employee.fullName} />
+                      ) : (
+                        <p>No Avatar</p>
+                      )}
                     </Link>
                   </div>
                   <div className="dropdown profile-action">

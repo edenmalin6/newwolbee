@@ -36,10 +36,14 @@ export default function HrStatistics() {
   const [selectedTeam, setSelectedTeam] = useState("");
   const [values, setValues] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { //need to fetch the teams once 
     const fetchTeams = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/teams");
+        const response = await axios.get("http://localhost:5000/api/teams",{
+          headers: {
+            Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+          },
+        });
         setValues(response.data);
       } catch (error) {
         console.error("Error fetching team :", error);
