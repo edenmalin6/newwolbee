@@ -106,7 +106,7 @@ const SignUp = () => {
             {/* /Account Logo */}
             <div className="account-box">
               <div className="account-wrapper">
-                <h3 className="account-title">Register</h3>
+                <h3 className="account-title">Continue</h3>
                 <p className="account-subtitle">Access to our dashboard</p>
                 {/* Account Form */}
                 <div>

@@ -5,7 +5,7 @@ const initialState = {
   // isLoading: true,
   header: false,
 };
-
+//signInWithEmailAndPassword
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -15,7 +15,7 @@ export const userSlice = createSlice({
         uid: action.payload.uid,
         email: action.payload.email,
         role: action.payload.role,
-        updateToken: action.payload.updateToken,
+        token: action.payload.token,
       };
     },
     logout: (state) => {
@@ -33,6 +33,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, logout,updateToken, setLoading, setLayout, setToogleHeader } =
+export const { login, logout, setLoading, setLayout, setToogleHeader } =
   userSlice.actions;
 export default userSlice.reducer;

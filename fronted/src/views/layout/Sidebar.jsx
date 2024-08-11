@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { SidebarData } from "./sidebardata";
 import { managerSideBarData } from "./HrSideBarData";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import * as Icon from "react-feather";
 import { useSelector } from "react-redux";
 
@@ -31,9 +30,7 @@ const Sidebar = () => {
   const [isSideMenunew, setSideMenuNew] = useState("dashboard");
 
 
-  const user = useSelector((state) => state.user.user);
-  
-
+  const user = useSelector((state) => state.user.user); 
   useEffect(() => {
     if (user && user.role) {
       if (user.role === "manager") {
@@ -1771,7 +1768,7 @@ const Sidebar = () => {
               {/* {userRole !== "manager"} */}
               {sidebarData.map((mainTittle, index) => {
                 return (
-                  <>
+                <>
                     <li
                       className="menu-title"
                       key={index + 1}

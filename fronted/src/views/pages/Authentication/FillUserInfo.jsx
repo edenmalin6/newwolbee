@@ -39,8 +39,6 @@ const FillUserInfo = () => {
         }
       );
       const refreshedToken = await auth.currentUser.getIdTokenResult(true);
-      console.log(refreshedToken);
-      console.log(response.status);
       if (response.status === 201) {
         if (refreshedToken.claims.role === "manager") {
           navigate("/hrDashboard");

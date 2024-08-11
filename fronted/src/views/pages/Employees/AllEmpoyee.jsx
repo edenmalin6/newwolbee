@@ -67,7 +67,7 @@ const AllEmployee = () => {
           "http://localhost:5000/api/getEmployees",
           {
             headers: {
-              Authorization: `Bearer ${user.updateToken}`,
+              Authorization: `Bearer ${user.token}`,
             },
           }
         );
@@ -95,7 +95,7 @@ const AllEmployee = () => {
       try {
         const response = await axios.get("http://localhost:5000/api/teams", {
           headers: {
-            Authorization: `Bearer ${user.updateToken}`,
+            Authorization: `Bearer ${user.token}`,
           },
         });
         setValues(response.data);

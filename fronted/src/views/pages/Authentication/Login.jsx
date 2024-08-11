@@ -10,7 +10,7 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../../../firebase/firebaseConfig";
+import { auth, googleAuthProvider } from "../../../firebase/firebaseConfig";
 import { FirebaseError } from "firebase/app";
 
 const schema = yup.object().shape({
@@ -39,7 +39,8 @@ const Login = () => {
   });
   const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
+  //signInWithEmailAndPassword
+  const onSubmit = async (data) => { 
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -48,12 +49,17 @@ const Login = () => {
       );
       const user = userCredential.user;
       const tokenData = await user.getIdTokenResult();
-
-      console.log(await auth.currentUser.getIdTokenResult());
-      if (tokenData.claims.role === "manager") {
-        navigate("/hrDashboard");
-      } else {
-        navigate("/myDashboard");
+      if (
+        tokenData.claims.role !== null ||
+        tokenData.claims.role === undefined
+      ) {
+        if (tokenData.claims.role === "manager") {
+          navigate("/hrDashboard");
+        } else if (tokenData.claims.role === "otherUser") {
+          navigate("/myDashboard");
+        } else {
+          navigate("/fill-info");
+        }
       }
     } catch (error) {
       if (error instanceof FirebaseError) {
@@ -65,6 +71,28 @@ const Login = () => {
       } else {
         console.error("Error signing up or adding document: ", error);
       }
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      const user = result.user;
+      const tokenData = await user.getIdTokenResult();
+      if (
+        tokenData.claims.role !== null ||
+        tokenData.claims.role === undefined
+      ) {
+        if (tokenData.claims.role === "manager") {
+          navigate("/hrDashboard");
+        } else if (tokenData.claims.role === "otherUser") {
+          navigate("/myDashboard");
+        } else {
+          navigate("/fill-info");
+        }
+      }
+    } catch (error) {
+      console.error("Error signing up or adding document: ", error);
     }
   };
 
@@ -183,7 +211,7 @@ const Login = () => {
                       <div className="col s12 m6 offset-m3 center-align">
                         <div className="col-md-12">
                           <button
-                            // onClick={handleGoogle}
+                            onClick={signInWithGoogle}
                             className="btn btn-lg btn-google btn-block btn-outline"
                             href="#"
                           >
@@ -192,7 +220,7 @@ const Login = () => {
                               alt="Google logo"
                               style={{ width: "26px", height: "26px" }}
                             />{" "}
-                            Sign up with Google
+                            Sign in with Google
                           </button>
                         </div>
                       </div>

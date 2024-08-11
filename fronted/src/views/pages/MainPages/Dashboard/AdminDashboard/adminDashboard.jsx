@@ -12,10 +12,10 @@ import { base_url } from "../../../../../base_urls";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
-
+// what is this ?
   useEffect(() => {
     axios
-      .get(base_url + "http://localhost:3000")
+      .get(base_url + "http://localhost:5000")
       .then((res) => setUsers(res.data))
       .catch((error) => {
         console.error("There was an error fetching the data!", error);

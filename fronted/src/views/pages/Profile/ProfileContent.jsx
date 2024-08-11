@@ -134,12 +134,9 @@ export const ProjectDetails = () => {
             <div style={{ marginLeft: "15px" }}>
               {selectedEmployee.TopInsights.map((insight, index) => {
                 let parsedInsight;
-                console.log(insight);
                 parsedInsight = JSON.parse(insight);
-                console.log(parsedInsight);
                 try {
                   parsedInsight = JSON.parse(insight);
-                  console.log(parsedInsight);
                 } catch (error) {
                   console.error("Failed to parse TopInsights JSON:", error);
                   parsedInsight = {}; // או כל ברירת מחדל

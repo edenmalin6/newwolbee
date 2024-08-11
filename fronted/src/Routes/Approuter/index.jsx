@@ -62,10 +62,8 @@ import { auth } from "../../firebase/firebaseConfig";
 import {
   login,
   setLoading,
-  logout,
-  updateToken,
+  logout
 } from "../../features/userSlice";
-import { getIdToken } from "firebase/auth";
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -84,15 +82,16 @@ const AppRouter = () => {
     const unsubscribe = auth.onIdTokenChanged(async (user) => {
       if (user) {
         const token = await user.getIdTokenResult();
-        const encodedToken = await user.getIdToken();
-        dispatch(
-          login({
-            uid: user.uid,
-            email: user.email,
-            role: token.claims.role,
-            updateToken: encodedToken,
-          })
-        );
+        const encodedToken = await user.getIdToken();       
+          dispatch(
+            login({
+              uid: user.uid,
+              email: user.email,
+              role: token.claims.role,
+              token: encodedToken,
+            })
+          );
+      
       } else {
         dispatch(logout());
       }
@@ -100,7 +99,6 @@ const AppRouter = () => {
 
     return () => {
       unsubscribe();
-      // unsubscribeToken();
     }; // Cleanup subscription on unmount
   }, [dispatch]);
 
