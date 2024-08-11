@@ -91,6 +91,8 @@ const AppRouter = () => {
               token: encodedToken,
             })
           );
+          // console.log(token);
+          
       
       } else {
         dispatch(logout());

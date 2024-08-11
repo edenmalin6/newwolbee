@@ -7,15 +7,20 @@ import interactionPlugin from "@fullcalendar/interaction/index.js";
 import axios from "axios";
 import CalendarModal from "../../../../../components/modelpopup/CalendarModal";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 
 const Calendar = (props) => {
   const [events, setEvents] = useState([]);
+  // const[userEvents, setUserEvents] = useState([])
   const location = useLocation();
   const linkRef = useRef(null);
   const eventName = location.state?.eventName;
   const openModal = location.state?.openModal;
   console.log("Location state:", location.state); // הדפס את ערך ה-state של המיקום
   console.log("Event name:", eventName); // הדפס את שם האירוע
+
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -35,6 +40,32 @@ const Calendar = (props) => {
     };
     fetchEvents();
   }, []);
+  //------show the events created by manager-------
+  useEffect(() => {
+    const getEventsFromDb = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/getEvents", {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+
+        // Map result to desired structure
+        const newEvents = response.data.map((val) => ({
+          title: val.title,
+          start: val.start,
+          className: val.className,
+        }));        
+
+        // Update state with fetched events
+        setEvents((prevEvents) => [...prevEvents, ...newEvents]);
+      } catch (error) {
+        console.error("Error getting events from db", error);
+      }
+    };
+
+    getEventsFromDb();
+  }, [user]);
 
   const addEvent = (newEvent) => {
     setEvents([...events, newEvent]);

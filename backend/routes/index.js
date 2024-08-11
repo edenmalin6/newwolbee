@@ -4,6 +4,11 @@ import { getAuth } from "firebase-admin/auth";
 import { fillUserInfo, verifyAuthentication } from "../controllers/userAuth.js";
 import { getTeams } from "../controllers/teamsData.js";
 import { getEmployees } from "../controllers/employeesData.js";
+import {
+  addEvent,
+  // addEventNote,
+  getEvents,
+} from "../controllers/eventsData.js";
 
 const router = express.Router();
 initializeApp({
@@ -27,7 +32,6 @@ const authMiddleware = async (req, res, next) => {
     const decodedToken = await getAuth().verifyIdToken(idToken); //check if token is valid - authentication(where does the request come from?)
     req.uid = decodedToken.uid; //put uid from firebase in the req - identification(who's making the request)
     next();
-
   } catch (error) {
     console.error("Error verifying token:", error);
     let status = 401;
@@ -51,7 +55,6 @@ const authMiddleware = async (req, res, next) => {
 
     return res.status(status).json({ error: message });
   }
-
 };
 
 router.use(authMiddleware);
@@ -60,11 +63,15 @@ router.use(authMiddleware);
 router.post("/fill-info", fillUserInfo);
 // //login
 router.post("/login", verifyAuthentication);
-// //logout user
-// router.get('/logout',logout)
 //get Teams
 router.get("/teams", getTeams);
 //get all employees
 router.get("/getEmployees", getEmployees);
+//get all events
+router.get("/getEvents", getEvents);
+//add event to calendar
+router.post("/addEvent", addEvent);
+//add event note endpoint
+// router.post("/addEventNote", addEventNote);
 
 export default router;

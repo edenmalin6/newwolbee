@@ -3,6 +3,8 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const CalendarModal = ({ addEvent }, props) => {
   const location = useLocation();
@@ -10,25 +12,51 @@ const CalendarModal = ({ addEvent }, props) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [eventName, setEventName] = useState(neweventName);
   const [category, setCategory] = useState(null);
+  const user = useSelector((state) => state.user.user);
 
-  console.log("Location state:", location.state);
-  console.log("Event name:", eventName);
+  // console.log("Location state:", location.state);
+  // console.log("Event name:", eventName);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (eventName && selectedDate && category) {
-      addEvent({
-        title: eventName,
-        start: selectedDate,
-        className: category.value,
-      });
-      setEventName("");
-      setSelectedDate(null);
-      setCategory(null);
+    let response;
+    try {
+      if (eventName && selectedDate && category) {
+        response = await axios.post(
+          "http://localhost:5000/api/addEvent",
+          {
+            eventData: {
+              title: eventName,
+              start: selectedDate,
+              className: category.value,
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+
+        const savedEvent = response.data;
+
+        addEvent({
+          title: savedEvent.title,
+          start: savedEvent.selectedDate,
+          className: savedEvent.className,
+        });
+        setEventName("");
+        setSelectedDate(null);
+        setCategory(null);
+// TODO: just for now even tho its disgusting
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error adding event:", error);
     }
   };
 
@@ -59,15 +87,8 @@ const CalendarModal = ({ addEvent }, props) => {
 
   return (
     <>
-      <div
-        id="add_event"
-        className="modal custom-modal fade"
-        role="dialog"
-      >
-        <div
-          className="modal-dialog modal-dialog-centered"
-          role="document"
-        >
+      <div id="add_event" className="modal custom-modal fade" role="dialog">
+        <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Add Event</h5>
@@ -84,8 +105,7 @@ const CalendarModal = ({ addEvent }, props) => {
               <form onSubmit={handleSubmit}>
                 <div className="input-block mb-3">
                   <label className="col-form-label">
-                    Event Name{" "}
-                    <span className="text-danger">*</span>
+                    Event Name <span className="text-danger">*</span>
                   </label>
                   <input
                     className="form-control"
@@ -98,9 +118,7 @@ const CalendarModal = ({ addEvent }, props) => {
                 <div className="input-block mb-3">
                   <label className="col-form-label">
                     Event Date{" "}
-                    <span className="text-danger">
-                      for {eventName}
-                    </span>
+                    <span className="text-danger">for {eventName}</span>
                   </label>
                   <div className="cal-icon">
                     <DatePicker
@@ -127,10 +145,7 @@ const CalendarModal = ({ addEvent }, props) => {
                   />
                 </div>
                 <div className="submit-section">
-                  <button
-                    className="btn btn-primary submit-btn"
-                    type="submit"
-                  >
+                  <button className="btn btn-primary submit-btn" type="submit">
                     Submit
                   </button>
                 </div>
