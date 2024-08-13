@@ -2,6 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const DeleteModal = (props) => {
+  //employee id
+  //who can delete a user?
+  //
+  const deleteEmployee = () => {};
   return (
     <>
       {/* Delete Performance Indicator Modal */}
@@ -11,23 +15,27 @@ const DeleteModal = (props) => {
             <div className="modal-body">
               <div className="form-header">
                 <h3>{props.Name}</h3>
-                <p>Are you sure want to delete?</p>
+                <p>Are you sure want to delete this employee?</p>
               </div>
               <div className="modal-btn delete-action">
                 <div className="row">
                   <div className="col-6">
-                    <Link to="#" className="btn btn-primary continue-btn">
+                    <button
+                      data-bs-dismiss="modal"
+                      onClick={deleteEmployee}
+                      className="btn btn-primary continue-btn"
+                    >
                       Delete
-                    </Link>
+                    </button>
                   </div>
                   <div className="col-6">
-                    <Link
+                    <button
                       to="#"
                       data-bs-dismiss="modal"
                       className="btn btn-primary cancel-btn"
                     >
                       Cancel
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>

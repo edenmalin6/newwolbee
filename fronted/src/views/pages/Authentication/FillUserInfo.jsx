@@ -30,6 +30,7 @@ const FillUserInfo = () => {
       const response = await axios.post(
         "http://localhost:5000/api/fill-info",
         {
+          firstName: data.firstName,
           civilId: data.id,
         },
         {
@@ -79,18 +80,32 @@ const FillUserInfo = () => {
               <div className="account-wrapper">
                 <h3 className="account-title">Register</h3>
                 <p className="account-subtitle">
-                  Please fill in your ID in order to set your account{" "}
+                  Please fill in your details in order to set your account{" "}
                 </p>
                 {/* Account Form */}
                 <div>
                   <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="input-block mb-3">
+                  <div className="input-block mb-3">
                       {networkError && (
                         <span className="text-danger">
                           {/* network error */}
                           {networkError}
                         </span>
                       )}
+                      <label className="col-form-label">First Name</label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        id="firstName"
+                        {...register("firstName")}
+                        className={`form-control ${
+                          errors?.firstName ? "error-input" : ""
+                        }`}
+                        autoComplete="off"
+                      />
+                      <span className="text-danger">{errors?.firstName?.message}</span>
+                    </div>
+                    <div className="input-block mb-3">
                       <label className="col-form-label">ID</label>
                       <input
                         type="text"

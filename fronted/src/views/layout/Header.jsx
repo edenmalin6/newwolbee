@@ -22,15 +22,15 @@ import { logout } from "../../features/userSlice";
 import { signOut } from "firebase/auth";
 
 const Header = (props) => {
+  const [username, setUsername] = useState("")
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handleLogout = (() => {
-    dispatch(logout())
-    signOut(auth)
-    navigate("/")
-
-  })
+  const handleLogout = () => {
+    dispatch(logout());
+    signOut(auth);
+    navigate("/");
+  };
   const initialNotifications = notificationsData.notifications.map(
     (notification) => ({
       ...notification,
@@ -81,7 +81,6 @@ const Header = (props) => {
     );
   };
 
-
   const notificationNav = (key) => {
     const notification = notifications.find(
       (notification) => notification.id === key
@@ -122,16 +121,16 @@ const Header = (props) => {
 
   const location = useLocation();
   let pathname = location.pathname;
-
-  const Credencial = localStorage.getItem("credencial");
-  const Value = JSON.parse(Credencial);
-  const UserName = Value?.email?.split("@")[0];
-  const ProfileName = UserName?.charAt(0).toUpperCase() + UserName?.slice(1);
+  const user = useSelector((state) => state.user.user);
+  // let ProfileName;
 
   const { t, i18n } = useTranslation();
 
   // Close notification when clicking outside
   useEffect(() => {
+    if (user && user.firstName) {
+     setUsername(user.firstName)
+    } 
     const handleClickOutside = (event) => {
       if (
         notificationRef.current &&
@@ -144,7 +143,7 @@ const Header = (props) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [notificationRef]);
+  }, [user, notificationRef]);
 
   return (
     <div className="header" style={{ right: "0px" }}>
@@ -173,7 +172,7 @@ const Header = (props) => {
           Hi{" "}
           <span style={{ fontWeight: "bold", fontSize: "20px" }}>
             {" "}
-            {ProfileName ? `${ProfileName}` : "Admin"}{" "}
+            {username && username}{" "}
           </span>
           welcome back to wolbee{" "}
         </h4>
@@ -399,7 +398,7 @@ const Header = (props) => {
               <img src={manager} alt="img" />
               <span className="status online" />
             </span>
-            <span>{ProfileName ? `${ProfileName}` : "Admin"}</span>
+            {/* <span>{username && username}</span> */}
           </Link>
           <div
             className={`dropdown-menu dropdown-menu-end ${

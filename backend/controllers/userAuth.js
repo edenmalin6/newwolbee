@@ -3,12 +3,12 @@ import { getAuth } from "firebase-admin/auth";
 
 //"register"
 export const fillUserInfo = async (req, res) => {
- const { civilId } = req.body
+ const { firstName, civilId } = req.body
  const {uid} = req
  let payload;
   try {
   //add user's role with user claims
-   await getAuth().setCustomUserClaims(uid, {role: civilId == 0 ? "manager" : "otherUser", civilId})
+   await getAuth().setCustomUserClaims(uid, {firstName, role: civilId == 0 ? "manager" : "otherUser", civilId})
   //save users role and civil id in db
   payload = {
     civilId,

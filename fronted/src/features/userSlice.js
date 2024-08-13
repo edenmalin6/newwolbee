@@ -13,7 +13,7 @@ export const userSlice = createSlice({
     login: (state, action) => {
       state.user = {
         uid: action.payload.uid,
-        email: action.payload.email,
+        firstName: action.payload.firstName,
         role: action.payload.role,
         token: action.payload.token,
       };
