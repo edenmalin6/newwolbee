@@ -128,8 +128,11 @@ const Header = (props) => {
 
   // Close notification when clicking outside
   useEffect(() => {
-    if (user && user.firstName) {
-     setUsername(user.firstName)
+    if (user && user.fullName) {
+      const fullName = user.fullName
+      const firstName = fullName.split(" ")     
+     setUsername(firstName[0])
+    // setUsername(user.fullName)
     } 
     const handleClickOutside = (event) => {
       if (

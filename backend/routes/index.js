@@ -14,7 +14,9 @@ const router = express.Router();
 initializeApp({
   //in order to verify user Id tokens
   credential: applicationDefault(),
+  projectId: "wolbee-444d9"
 });
+
 
 const authMiddleware = async (req, res, next) => {
   let { authorization } = req.headers;

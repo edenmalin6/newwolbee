@@ -86,7 +86,7 @@ const AppRouter = () => {
           dispatch(
             login({
               uid: user.uid,
-              firstName: token.claims.firstName,
+              fullName: token.claims.fullName,
               role: token.claims.role,
               token: encodedToken,
             })

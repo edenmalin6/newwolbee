@@ -10,14 +10,14 @@ export const getEmployees = async (req, res) => {
   }
   res.status(200).json(employees);
 };
-export const deleteEmployee = async (req, res) => {
-  let employee;
-  const { userId } = req.body;
-  try {
-    employee = await EmployeeModel.findByIdAndDelete({ userId });
-  } catch (error) {
-    console.error("Error finding employee:", error);
-    res.status(500).send("Internal Server Error");
-  }
-  res.status(200).json("Employee has been removed successfully");
-};
+// export const deleteEmployee = async (req, res) => {
+//   let employee;
+//   const { userId } = req.body;
+//   try {
+//     employee = await EmployeeModel.findByIdAndDelete({ userId });
+//   } catch (error) {
+//     console.error("Error finding employee:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+//   res.status(200).json("Employee has been removed successfully");
+// };

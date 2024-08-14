@@ -30,7 +30,7 @@ const FillUserInfo = () => {
       const response = await axios.post(
         "http://localhost:5000/api/fill-info",
         {
-          firstName: data.firstName,
+          fullName: data.fullName,
           civilId: data.id,
         },
         {
@@ -92,18 +92,18 @@ const FillUserInfo = () => {
                           {networkError}
                         </span>
                       )}
-                      <label className="col-form-label">First Name</label>
+                      <label className="col-form-label">Full Name</label>
                       <input
                         type="text"
-                        name="firstName"
-                        id="firstName"
-                        {...register("firstName")}
+                        name="fullName"
+                        id="fullName"
+                        {...register("fullName")}
                         className={`form-control ${
-                          errors?.firstName ? "error-input" : ""
+                          errors?.fullName ? "error-input" : ""
                         }`}
                         autoComplete="off"
                       />
-                      <span className="text-danger">{errors?.firstName?.message}</span>
+                      <span className="text-danger">{errors?.fullName?.message}</span>
                     </div>
                     <div className="input-block mb-3">
                       <label className="col-form-label">ID</label>

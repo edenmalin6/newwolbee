@@ -2,7 +2,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 // Your web app's Firebase configuration
-//.env is needed here for
 const firebaseConfig = {
   // apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   // authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,

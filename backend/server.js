@@ -20,7 +20,7 @@ app.use(express.static("fronted"));
 app.use(
   cors({
     origin: [
-      "http://www.wolbee.com", 
+      "http://www.wolbee.com",
       "https://wolbee-front-gkfchuwp6q-uc.a.run.app",
       "http://localhost:3000",
     ],
@@ -43,7 +43,6 @@ app.use(
 // const data = xlsx.utils.sheet_to_json(worksheet);
 // // data.splice(0, 1);
 // console.log(data)
-
 
 // FOR GOOD GOOD PRACTICE. since"" empty env is a red flag
 const port = process.env.PORT ?? 5000;

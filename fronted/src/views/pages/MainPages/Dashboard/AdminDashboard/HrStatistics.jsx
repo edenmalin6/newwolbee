@@ -30,21 +30,24 @@ import sofia from "../../../../../imgs/avatar_12.JPG";
 import Select from "react-select";
 import { AlignCenter } from "react-feather";
 import { auth } from "../../../../../firebase/firebaseConfig";
+import { useSelector } from "react-redux";
 
 // console.log(auth.currentUser.getIdTokenResult());
 export default function HrStatistics() {
   const [selectedTeam, setSelectedTeam] = useState("");
   const [values, setValues] = useState([]);
-
+  const user = useSelector((state)=>state.user.user)
   useEffect(() => { //need to fetch the teams once 
     const fetchTeams = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/teams",{
+        if(user) {
+          const response = await axios.get("http://localhost:5000/api/teams",{
           headers: {
-            Authorization: `Bearer ${await auth.currentUser.getIdToken()}`,
+            Authorization: `Bearer ${await user.token}`,
           },
         });
-        setValues(response.data);
+        setValues(response.data);}
+        
       } catch (error) {
         console.error("Error fetching team :", error);
       }
